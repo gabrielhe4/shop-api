@@ -11,18 +11,15 @@ import io.github.gabrielhe4.shop_api.service.CategoryService;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    private final CategoryMapper categoryMapper;
-
     private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(CategoryMapper categoryMapper, CategoryRepository categoryRepository) {
-        this.categoryMapper = categoryMapper;
+    public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
     @Override
     public void createCategory(CategoryRequestDTO request) {
-        Category newCategory = categoryMapper.toNewEntity(request);
+        Category newCategory = CategoryMapper.INSTANCE.toNewEntity(request);
         categoryRepository.save(newCategory);
     }
 

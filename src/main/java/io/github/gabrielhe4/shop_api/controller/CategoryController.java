@@ -3,8 +3,10 @@ package io.github.gabrielhe4.shop_api.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.gabrielhe4.shop_api.config.AppConstants;
 import io.github.gabrielhe4.shop_api.dto.CategoryDTO;
 import io.github.gabrielhe4.shop_api.dto.CategoryRequestDTO;
+import io.github.gabrielhe4.shop_api.dto.PaginatedCategoryResponse;
 import io.github.gabrielhe4.shop_api.service.CategoryService;
 import jakarta.validation.Valid;
 
@@ -14,6 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -41,5 +47,27 @@ public class CategoryController {
         
         return ResponseEntity.ok(response);
     }
-    
+
+    @GetMapping("/public/categories")
+    public ResponseEntity<PaginatedCategoryResponse> getAllCategories(
+        @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER) Integer pageNumber,
+        @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE) Integer pageSize,
+        @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CUSTOMERS_BY) String sortBy,
+        @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR) String sortOrder
+    ) {
+        
+        var response = categoryService.getAllCategories(pageNumber, pageSize, sortBy, sortOrder);
+        
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/admin/categories/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+
+        categoryService.deleteCategory(id);
+
+        return ResponseEntity.noContent().build();
+        
+    }
+
 }

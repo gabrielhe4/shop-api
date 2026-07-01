@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
+import io.github.gabrielhe4.shop_api.dto.CategoryDTO;
 import io.github.gabrielhe4.shop_api.dto.CategoryRequestDTO;
 import io.github.gabrielhe4.shop_api.model.Category;
 
@@ -20,4 +21,6 @@ public interface CategoryMapper {
         CategoryRequestDTO request,
         @MappingTarget Category category
     );
+
+    CategoryDTO toDTO(Category category);
 }

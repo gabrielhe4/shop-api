@@ -1,6 +1,12 @@
 package io.github.gabrielhe4.shop_api.service.impl;
 
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import io.github.gabrielhe4.shop_api.dto.PaginatedProductResponse;
@@ -48,8 +54,30 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public PaginatedProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy,
             String sortOrder) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllProducts'");
+        
+        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) 
+            ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        List<ProductDTO> productDTOs = productPage.getContent()
+            .stream()
+            .map(ProductMapper.INSTANCE::toDTO)
+            .toList();
+
+        var response = PaginatedProductResponse.builder()
+            .content(productDTOs)
+            .pageNumber(productPage.getNumber())
+            .pageSize(productPage.getSize())
+            .totalElements(productPage.getTotalElements())
+            .totalPages(productPage.getTotalPages())
+            .lastPage(productPage.isLast())
+            .build();
+
+        return response;
+            
     }
 
     @Override

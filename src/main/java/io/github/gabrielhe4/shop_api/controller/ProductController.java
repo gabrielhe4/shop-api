@@ -50,9 +50,29 @@ public class ProductController {
             sortBy,
             sortOrder
         );
-        
+
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/public/categories/{id}/products")
+    public ResponseEntity<PaginatedProductResponse> getProductsByCategory(
+        @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER) Integer pageNumber,
+        @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE) Integer pageSize,
+        @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CUSTOMERS_BY) String sortBy,
+        @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR) String sortOrder,
+        @PathVariable Long id
+    ) {
+        var response = productService.searchByCategory(
+            id,
+            pageNumber,
+            pageSize,
+            sortBy,
+            sortOrder
+        );
+
+        return ResponseEntity.ok(response);
+    }
+    
     
     
 

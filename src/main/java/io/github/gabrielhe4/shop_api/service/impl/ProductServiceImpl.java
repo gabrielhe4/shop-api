@@ -62,19 +62,7 @@ public class ProductServiceImpl implements ProductService{
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Product> productPage = productRepository.findAll(pageable);
 
-        List<ProductDTO> productDTOs = productPage.getContent()
-            .stream()
-            .map(ProductMapper.INSTANCE::toDTO)
-            .toList();
-
-        var response = PaginatedProductResponse.builder()
-            .content(productDTOs)
-            .pageNumber(productPage.getNumber())
-            .pageSize(productPage.getSize())
-            .totalElements(productPage.getTotalElements())
-            .totalPages(productPage.getTotalPages())
-            .lastPage(productPage.isLast())
-            .build();
+        var response = buildPaginatedResponse(productPage);
 
         return response;
             
@@ -83,21 +71,58 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public PaginatedProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize,
             String sortBy, String sortOrder) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'searchByCategory'");
+        
+        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) 
+            ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Product> productPage = productRepository.findByCategory(category, pageable);
+
+        var response = buildPaginatedResponse(productPage);
+
+        return response;
     }
 
     @Override
     public PaginatedProductResponse searchProductBy(String keyword, Integer pageNumber, Integer pageSize, String sortBy,
             String sortOrder) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'searchProductBy'");
+
+        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) 
+            ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Product> productPage = productRepository.findByNameLikeIgnoreCase(keyword, pageDetails);
+
+        var response = buildPaginatedResponse(productPage);
+
+        return response;
     }
 
     @Override
     public ProductDTO updateProduct(Long productId, ProductDTO product) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateProduct'");
+    }
+
+    private PaginatedProductResponse buildPaginatedResponse(Page<Product> productPage) {
+        List<ProductDTO> productDTOs = productPage.getContent()
+            .stream()
+            .map(ProductMapper.INSTANCE::toDTO)
+            .toList();
+
+        return PaginatedProductResponse.builder()
+            .content(productDTOs)
+            .pageNumber(productPage.getNumber())
+            .pageSize(productPage.getSize())
+            .totalElements(productPage.getTotalElements())
+            .totalPages(productPage.getTotalPages())
+            .lastPage(productPage.isLast())
+            .build();
     }
 
 }

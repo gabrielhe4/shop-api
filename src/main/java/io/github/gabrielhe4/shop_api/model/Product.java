@@ -29,7 +29,7 @@ public class Product {
 
     private String description;
 
-    private String quantity;
+    private Integer quantity;
 
     private Double price;
 

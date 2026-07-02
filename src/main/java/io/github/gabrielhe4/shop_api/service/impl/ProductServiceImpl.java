@@ -1,13 +1,18 @@
 package io.github.gabrielhe4.shop_api.service.impl;
 
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.github.gabrielhe4.shop_api.dto.PaginatedProductResponse;
 import io.github.gabrielhe4.shop_api.dto.ProductDTO;
@@ -18,6 +23,7 @@ import io.github.gabrielhe4.shop_api.model.Category;
 import io.github.gabrielhe4.shop_api.model.Product;
 import io.github.gabrielhe4.shop_api.repository.CategoryRepository;
 import io.github.gabrielhe4.shop_api.repository.ProductRepository;
+import io.github.gabrielhe4.shop_api.service.FileService;
 import io.github.gabrielhe4.shop_api.service.ProductService;
 
 @Service
@@ -27,9 +33,16 @@ public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository) {
+    private final FileService fileService;
+
+    @Value("${project.image}")
+    private String path;
+
+    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, 
+            FileService fileService) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
+        this.fileService = fileService;
     }
 
     @Override
@@ -105,11 +118,27 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDTO updateProduct(Long productId, ProductDTO product) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateProduct'");
+        
+        Product existingProduct = productRepository.findById(productId)
+            .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+        double specialPrice = product.getPrice() - ((product.getDiscount() * 0.01) * product.getPrice());
+
+        existingProduct.setName(product.getName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setQuantity(product.getQuantity());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setDiscount(product.getDiscount());
+        existingProduct.setSpecialPrice(specialPrice);
+
+        productRepository.save(existingProduct);
+
+        return ProductMapper.INSTANCE.toDTO(existingProduct);
+
     }
 
     private PaginatedProductResponse buildPaginatedResponse(Page<Product> productPage) {
+        
         List<ProductDTO> productDTOs = productPage.getContent()
             .stream()
             .map(ProductMapper.INSTANCE::toDTO)
@@ -123,6 +152,30 @@ public class ProductServiceImpl implements ProductService{
             .totalPages(productPage.getTotalPages())
             .lastPage(productPage.isLast())
             .build();
+            
+    }
+
+    @Override
+    public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
+        Product existingProduct = productRepository.findById(productId)
+            .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+        String fileName = fileService.uploadImage(path, image);
+        existingProduct.setImage(fileName);
+
+        Product updatedProduct = productRepository.save(existingProduct);
+        return ProductMapper.INSTANCE.toDTO(updatedProduct);
+    }
+
+    @Override
+    public void deleteProduct(Long productId) {
+        
+        Product existingProduct = productRepository.findById(productId)
+            .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+        // TODO: Delete image from path
+
+        productRepository.delete(existingProduct);
     }
 
 }

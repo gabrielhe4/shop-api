@@ -1,3 +1,6 @@
+project:
+    image: images/
+    
 spring:
   application:
     name: shop-api

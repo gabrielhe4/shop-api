@@ -2,8 +2,6 @@ package io.github.gabrielhe4.shop_api.service.impl;
 
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;

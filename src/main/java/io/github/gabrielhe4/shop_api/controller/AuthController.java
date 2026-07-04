@@ -14,12 +14,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.github.gabrielhe4.shop_api.dto.LoginRequest;
+import io.github.gabrielhe4.shop_api.dto.MessageResponse;
+import io.github.gabrielhe4.shop_api.dto.SignupRequest;
 import io.github.gabrielhe4.shop_api.dto.UserInfoResponse;
 import io.github.gabrielhe4.shop_api.service.AuthService;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 @Controller
@@ -60,6 +64,47 @@ public class AuthController {
             .header(HttpHeaders.SET_COOKIE, cookie)
             .body(response);
     }
+
+    @PostMapping("sign-up")
+    public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest request) {
+        if (authService.checkIfUsernameExists(request.username()))
+            return ResponseEntity
+                .badRequest()
+                .body(new MessageResponse("Error: Username is already taken!!!"));
+        
+        if(authService.checkIfEmailExists(request.email()))
+            return ResponseEntity
+                .badRequest()
+                .body(new MessageResponse("Error: Email is already taken!!!"));
+
+        authService.registerUser(request);
+        
+        return ResponseEntity.ok(new MessageResponse("User registered successfully"));
+    }
+
+    @GetMapping("/username")
+    public ResponseEntity<String> getCurrentUsername(Authentication auth) {
+
+        if (auth == null)
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Error: User not found");
+
+        var response = authService.authenticateUser(auth);
+
+        return ResponseEntity.ok().body(response.username());
+
+    }
+
+    @PostMapping("/sign-out")
+    public ResponseEntity<MessageResponse> postMethodName(@RequestBody String entity) {
+        var cleanedCookie = authService.cleanJwtCookie();
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE,  cleanedCookie)
+            .body(new MessageResponse("You've been signed out!"));
+    }
+    
+    
+    
 
 
     

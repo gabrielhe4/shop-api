@@ -12,9 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.github.gabrielhe4.shop_api.model.User;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@Getter
 public class UserDetailsImpl implements UserDetails {
 
     private static final long serialVersionUID = 1L;

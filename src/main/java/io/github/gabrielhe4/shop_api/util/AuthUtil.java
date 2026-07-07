@@ -17,7 +17,7 @@ public class AuthUtil {
         this.userRepository = userRepository;
     }
 
-    public String getLoggedInEMail() {
+    public String getLoggedInEmail() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(auth.getName()).orElseThrow(
             () -> new UsernameNotFoundException("User not found")

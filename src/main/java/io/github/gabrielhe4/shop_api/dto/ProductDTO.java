@@ -2,6 +2,7 @@ package io.github.gabrielhe4.shop_api.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 @Getter
@@ -11,7 +12,10 @@ public class ProductDTO {
     String name;
     String description;
     String image;
+
+    @Setter
     Integer quantity;
+
     Double price;
     Double discount;
     Double specialPrice;

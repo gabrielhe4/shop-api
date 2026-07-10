@@ -20,22 +20,16 @@ import io.github.gabrielhe4.shop_api.repository.UserRepository;
 import io.github.gabrielhe4.shop_api.security.JwtUtils;
 import io.github.gabrielhe4.shop_api.security.service.UserDetailsImpl;
 import io.github.gabrielhe4.shop_api.service.AuthService;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
-
-    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-            PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtils = jwtUtils;
-    }
 
     @Override
     public Boolean checkIfUsernameExists(String username) {

@@ -3,6 +3,8 @@ package io.github.gabrielhe4.shop_api.service.impl;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.springframework.stereotype.Service;
+
 import io.github.gabrielhe4.shop_api.dto.CartDTO;
 import io.github.gabrielhe4.shop_api.dto.ProductDTO;
 import io.github.gabrielhe4.shop_api.exception.APIException;
@@ -16,21 +18,16 @@ import io.github.gabrielhe4.shop_api.repository.CartRepository;
 import io.github.gabrielhe4.shop_api.repository.ProductRepository;
 import io.github.gabrielhe4.shop_api.service.CartService;
 import io.github.gabrielhe4.shop_api.util.AuthUtil;
+import lombok.RequiredArgsConstructor;
 
+@Service
+@RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
     private final AuthUtil authUtil;
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
-
-    public CartServiceImpl(CartRepository cartRepository, AuthUtil authUtil, ProductRepository productRepository,
-            CartItemRepository cartItemRepository) {
-        this.cartRepository = cartRepository;
-        this.authUtil = authUtil;
-        this.productRepository = productRepository;
-        this.cartItemRepository = cartItemRepository;
-    }
 
     @Override
     public CartDTO addProductToCart(Long productId, Integer quantity) {

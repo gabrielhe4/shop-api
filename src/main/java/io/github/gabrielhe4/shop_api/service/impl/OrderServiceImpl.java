@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import io.github.gabrielhe4.shop_api.dto.OrderDTO;
 import io.github.gabrielhe4.shop_api.dto.OrderItemDTO;
 import io.github.gabrielhe4.shop_api.dto.OrderRequestDTO;
@@ -29,7 +31,10 @@ import io.github.gabrielhe4.shop_api.repository.ProductRepository;
 import io.github.gabrielhe4.shop_api.service.CartService;
 import io.github.gabrielhe4.shop_api.service.OrderService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
+@Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     private final CartRepository cartRepository;
@@ -39,18 +44,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final CartService cartService;
-
-    public OrderServiceImpl(CartRepository cartRepository, AddressRepository addressRepository,
-            PaymentRepository paymentRepository, OrderRepository orderRepository,
-            OrderItemRepository orderItemRepository, ProductRepository productRepository, CartService cartService) {
-        this.cartRepository = cartRepository;
-        this.addressRepository = addressRepository;
-        this.paymentRepository = paymentRepository;
-        this.orderRepository = orderRepository;
-        this.orderItemRepository = orderItemRepository;
-        this.productRepository = productRepository;
-        this.cartService = cartService;
-    }
 
     @Override
     @Transactional

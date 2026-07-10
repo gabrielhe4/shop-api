@@ -35,7 +35,6 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart", cascade = {CascadeType.PERSIST, 
         CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true)
-    private List<Product> products = new ArrayList<>();
     private List<CartItem> cartItems = new ArrayList<>();
 
     @Setter

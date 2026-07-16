@@ -30,7 +30,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     @Override
     public AddressDTO create(AddressRequest request, User user) {
-        Address newAddress = AddressMapper.INSTANCE.toEntity(request);
+        Address newAddress = AddressRequest.toAddress(request);
         Address savedAddress = addressRepository.save(newAddress);
 
         List<Address> userAddresses = user.getAddresses();
@@ -73,12 +73,12 @@ public class AddressServiceImpl implements AddressService {
         Address existingAddress = addressRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("Address", "id", id)
         );
-        existingAddress.setStreet(request.getStreet());
-        existingAddress.setBuildingName(request.getBuildingName());
-        existingAddress.setCity(request.getCity());
-        existingAddress.setState(request.getState());
-        existingAddress.setCountry(request.getCountry());
-        existingAddress.setZipcode(request.getZipcode());
+        existingAddress.setStreet(request.street());
+        existingAddress.setBuildingName(request.buildingName());
+        existingAddress.setCity(request.city());
+        existingAddress.setState(request.state());
+        existingAddress.setCountry(request.country());
+        existingAddress.setZipcode(request.zipcode());
 
         Address updatedAddress = addressRepository.save(existingAddress);
 

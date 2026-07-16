@@ -63,7 +63,7 @@ public class AddressController {
 
     }
 
-    @GetMapping("user/address")
+    @GetMapping("user/addresses")
     public ResponseEntity<List<AddressDTO>> getUserAddresses() {
 
         User user = authUtil.getLoggedInUser();

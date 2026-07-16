@@ -40,7 +40,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/admin/categories/{categoryId}")
+    @PutMapping("/admin/categories/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequestDTO request) {
         
         CategoryDTO response = categoryService.updateCategory(id, request);
@@ -61,7 +61,7 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/admin/categories/{categoryId}")
+    @DeleteMapping("/admin/categories/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
 
         categoryService.deleteCategory(id);

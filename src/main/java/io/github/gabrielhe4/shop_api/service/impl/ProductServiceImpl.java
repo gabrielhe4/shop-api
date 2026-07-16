@@ -99,7 +99,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public PaginatedProductResponse searchProductBy(String keyword, Integer pageNumber, Integer pageSize, String sortBy,
+    public PaginatedProductResponse searchProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy,
             String sortOrder) {
 
         Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) 

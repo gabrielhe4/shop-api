@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -77,6 +78,26 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/public/products/keyword/{keyword}")
+    public ResponseEntity<PaginatedProductResponse> getProductsByKeyword(
+        @PathVariable String keyword,
+        @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER) Integer pageNumber,
+        @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE) Integer pageSize,
+        @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CUSTOMERS_BY) String sortBy,
+        @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR) String sortOrder,
+        @PathVariable Long id
+    ) {
+        var response = productService.searchProductByKeyword(
+            keyword,
+            pageNumber,
+            pageSize,
+            sortBy,
+            sortOrder
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/products/{productId}/image")
     public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId,
                                                          @RequestParam("image")MultipartFile image) throws IOException {
@@ -85,6 +106,12 @@ public class ProductController {
     }
     
     
-    
+    @DeleteMapping("/admin/products/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId){
+        
+        productService.deleteProduct(productId);
+        
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }

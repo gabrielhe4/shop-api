@@ -1,7 +1,8 @@
 package io.github.gabrielhe4.shop_api.service.impl;
 
 import java.util.List;
-import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,9 @@ public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(CartServiceImpl.class);
+
+
     @Override
     public CartDTO addProductToCart(Long productId, Integer quantity) {
         Cart cart = createCart();
@@ -49,6 +53,8 @@ public class CartServiceImpl implements CartService {
             throw new APIException(String.format("Product %s only has %d available!!!", 
                 product.getName(), product.getQuantity()));
 
+        log.info("Creating new cart item ->");
+
         CartItem newCartItem = CartItem.builder()
                                     .cart(cart)
                                     .product(product)
@@ -59,18 +65,33 @@ public class CartServiceImpl implements CartService {
         
         cartItemRepository.save(newCartItem);
 
-        List<CartItem> cartItems = cart.getCartItems();
+        log.debug("Cart item created: {}", newCartItem);
 
-        Stream<ProductDTO> productsStream = cartItems.stream()
+        product.setQuantity(product.getQuantity());
+
+        cart.setTotalPrice(cart.getTotalPrice() + (product.getSpecialPrice() * quantity));
+
+        List<CartItem> cartItems = cart.getCartItems();
+        cartItems.add(newCartItem);
+        cart.setCartItems(cartItems);
+
+        cartRepository.save(cart);
+
+        log.debug("Updating cart with id: {}", cart.getId());
+
+        List<ProductDTO> productsDto = cartItems.stream()
             .map(item -> {
                 ProductDTO dto = ProductMapper.INSTANCE.toDTO(item.getProduct());
                 dto.setQuantity(item.getQuantity());
                 return dto;
-            });
+            })
+            .toList();
+
+        log.info("Cart items added in cart: " + productsDto.size());
         
         return new CartDTO(cart.getId(), 
                 cart.getTotalPrice(),
-                productsStream.toList()
+                productsDto
             );
 
     }
@@ -78,10 +99,11 @@ public class CartServiceImpl implements CartService {
     private Cart createCart() {
         Cart userCart = cartRepository.findCartByEmail(authUtil.getLoggedInEmail());
 
-        if (userCart == null) 
+        if (userCart != null) 
             return userCart;
 
         Cart cart = new Cart(authUtil.getLoggedInUser(), 0.00);
+        log.info("New cart created!");
         return cartRepository.save(cart);
     }
 
@@ -154,7 +176,7 @@ public class CartServiceImpl implements CartService {
             throw new APIException("The resulting quantity cannot be negative.");
 
         if (newQuantity == 0) {
-            deleteProductFromCart(cartId, productId);
+            deleteProductFromCart(productId);
         } else {
             cartItem.setProductPrice(product.getSpecialPrice());
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
@@ -179,7 +201,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public String deleteProductFromCart(Long cartId, Long productId) {
+    public String deleteProductFromCart(Long productId) {
+
+        String email = authUtil.getLoggedInEmail();
+        Cart userCart = cartRepository.findCartByEmail(email);
+        Long cartId = userCart.getId();
         
         Cart cart = cartRepository.findById(productId).orElseThrow(
             () -> new ResourceNotFoundException("Cart", "cartId", cartId)

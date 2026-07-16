@@ -33,6 +33,7 @@ public class Cart {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Setter
     @OneToMany(mappedBy = "cart", cascade = {CascadeType.PERSIST, 
         CascadeType.REMOVE, CascadeType.MERGE}, orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>();

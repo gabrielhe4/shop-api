@@ -31,6 +31,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressDTO create(AddressRequest request, User user) {
         Address newAddress = AddressRequest.toAddress(request);
+        newAddress.setUser(user);
         Address savedAddress = addressRepository.save(newAddress);
 
         List<Address> userAddresses = user.getAddresses();

@@ -2,6 +2,8 @@ package io.github.gabrielhe4.shop_api.service.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ import io.github.gabrielhe4.shop_api.service.CategoryService;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private static Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
@@ -28,18 +31,27 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void createCategory(CategoryRequestDTO request) {
+
+        log.info("Creating new category...");
+
         Category newCategory = CategoryMapper.INSTANCE.toNewEntity(request);
+
         categoryRepository.save(newCategory);
+        log.info("New category created with ID: {}", newCategory.getId());
     }
 
     @Override
     public CategoryDTO updateCategory(Long id, CategoryRequestDTO request) {
         
+        log.info("Updating category with ID: {}", id);
+
         Category existingCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
 
         CategoryMapper.INSTANCE.updateEntity(request, existingCategory);
         categoryRepository.save(existingCategory);
+
+        log.info("Category with ID {} was updated succesfully.", id);
 
         return CategoryMapper.INSTANCE.toDTO(existingCategory);
     }
@@ -47,6 +59,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public PaginatedCategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy,
             String sortOrder) {
+
+        log.info("Obtaining all categories...");
 
         Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) ? 
             Sort.by(sortBy).ascending() : 
@@ -69,16 +83,22 @@ public class CategoryServiceImpl implements CategoryService {
             .lastPage(categoryPage.isLast())
             .build();
         
+        log.info("Returning paginated categories successfully.");
+        
         return response;
     }
 
     @Override
     public void deleteCategory(Long id) { 
 
+        log.info("Deleting category with ID: {}");
+
         Category existingCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
 
         categoryRepository.delete(existingCategory);
+
+        log.info("Category with ID: {} was deleted successfully.", id);
     }
 
 }

@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,19 +32,25 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     @Override
     public Boolean checkIfUsernameExists(String username) {
+        log.info("Checking if username exists: {}", username);
         return userRepository.existsByUsername(username);
     }
 
     @Override
     public Boolean checkIfEmailExists(String email) {
+        log.info("Checking if email exists: {}", email);
         return userRepository.existsByEmail(email);
     }
 
     @Override
     public void registerUser(SignupRequest request) {
+
+        log.info("Registering user with username: {}", request.username());
+
         User user = new User(request.username(), request.email(),
         passwordEncoder.encode(request.password()));
 
@@ -83,10 +91,14 @@ public class AuthServiceImpl implements AuthService {
 
         user.setRoles(roles);
         userRepository.save(user);
+        log.info("User registered successfully: {}", user.getUsername());
     }
 
     @Override
     public UserInfoDTO authenticateUser(Authentication authentication) {
+
+        log.info("Authenticating user...");
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetailsImpl);

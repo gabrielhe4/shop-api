@@ -4,6 +4,8 @@ package io.github.gabrielhe4.shop_api.service.impl;
 import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,10 +30,9 @@ import io.github.gabrielhe4.shop_api.service.ProductService;
 public class ProductServiceImpl implements ProductService{
 
     private final CategoryRepository categoryRepository;
-
     private final ProductRepository productRepository;
-
     private final FileService fileService;
+    private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Value("${project.image}")
     private String path;
@@ -45,6 +46,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDTO addProduct(Long categoryId, ProductRequest request) {
+        log.info("Adding a new product...");
        
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
@@ -53,11 +55,13 @@ public class ProductServiceImpl implements ProductService{
         
         Product product = ProductMapper.INSTANCE.toEntity(request);
 
+        log.info("Setting default image for product...");
         product.setImage("default-image.png");
         product.setSpecialPrice(specialPrice);
         product.setCategory(category);
 
         productRepository.save(product);
+        log.info("A new product was added with ID: {}", product.getId());
 
         return ProductMapper.INSTANCE.toDTO(product);
     }
@@ -65,7 +69,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public PaginatedProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy,
             String sortOrder) {
-        
+        log.info("Obtaining all products...");
         Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) 
             ? Sort.by(sortBy).ascending()
             : Sort.by(sortBy).descending();
@@ -74,6 +78,7 @@ public class ProductServiceImpl implements ProductService{
         Page<Product> productPage = productRepository.findAll(pageable);
 
         var response = buildPaginatedResponse(productPage);
+        log.info("Retrieving paginated products");
 
         return response;
             
@@ -82,7 +87,8 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public PaginatedProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize,
             String sortBy, String sortOrder) {
-        
+
+        log.info("Obtaining all products by category...");
         Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) 
             ? Sort.by(sortBy).ascending()
             : Sort.by(sortBy).descending();
@@ -94,6 +100,7 @@ public class ProductServiceImpl implements ProductService{
         Page<Product> productPage = productRepository.findByCategory(category, pageable);
 
         var response = buildPaginatedResponse(productPage);
+        log.info("Retrieving paginated products");
 
         return response;
     }
@@ -102,6 +109,7 @@ public class ProductServiceImpl implements ProductService{
     public PaginatedProductResponse searchProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy,
             String sortOrder) {
 
+        log.info("Obtaining all products by keyword...");
         Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) 
             ? Sort.by(sortBy).ascending()
             : Sort.by(sortBy).descending();
@@ -110,6 +118,7 @@ public class ProductServiceImpl implements ProductService{
         Page<Product> productPage = productRepository.findByNameLikeIgnoreCase(keyword, pageDetails);
 
         var response = buildPaginatedResponse(productPage);
+        log.info("Retrieving paginated products");
 
         return response;
     }
@@ -117,6 +126,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductDTO updateProduct(Long productId, ProductDTO product) {
         
+        log.info("Updating product with ID: {}", productId);
         Product existingProduct = productRepository.findById(productId)
             .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
@@ -130,6 +140,7 @@ public class ProductServiceImpl implements ProductService{
         existingProduct.setSpecialPrice(specialPrice);
 
         productRepository.save(existingProduct);
+        log.info("Product with ID: {} was updated successfully.", productId);
 
         return ProductMapper.INSTANCE.toDTO(existingProduct);
 
@@ -155,25 +166,33 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
+
+        log.info("Updating product image with ID: {} ...", productId);
+
         Product existingProduct = productRepository.findById(productId)
             .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
         String fileName = fileService.uploadImage(path, image);
         existingProduct.setImage(fileName);
+        log.debug("File name created: {}", fileName);
 
         Product updatedProduct = productRepository.save(existingProduct);
+        log.info("Product image updated with ID: {}", productId);
+
         return ProductMapper.INSTANCE.toDTO(updatedProduct);
     }
 
     @Override
     public void deleteProduct(Long productId) {
         
+        log.info("Deleting product with ID: {}", productId);
         Product existingProduct = productRepository.findById(productId)
             .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
         // TODO: Delete image from path
 
         productRepository.delete(existingProduct);
+        log.info("Product deleted with ID: {}", productId);
     }
 
 }

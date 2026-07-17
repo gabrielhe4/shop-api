@@ -2,6 +2,8 @@ package io.github.gabrielhe4.shop_api.service.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import io.github.gabrielhe4.shop_api.dto.AddressDTO;
@@ -19,8 +21,8 @@ import jakarta.transaction.Transactional;
 public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
-
     private final UserRepository userRepository;
+    private static final Logger log = LoggerFactory.getLogger(AddressServiceImpl.class);
 
     public AddressServiceImpl(AddressRepository addressRepository, UserRepository userRepository) {
         this.addressRepository = addressRepository;
@@ -30,6 +32,9 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     @Override
     public AddressDTO create(AddressRequest request, User user) {
+
+        log.info("Creating new address...");
+
         Address newAddress = AddressRequest.toAddress(request);
         newAddress.setUser(user);
         Address savedAddress = addressRepository.save(newAddress);
@@ -38,6 +43,9 @@ public class AddressServiceImpl implements AddressService {
         userAddresses.add(savedAddress);
         user.setAddresses(userAddresses);
         userRepository.save(user);
+
+        log.info("New address with ID {} created for user: {}", 
+            newAddress.getId(), user.getUsername());
 
         return AddressMapper.INSTANCE.toDTO(savedAddress);
 
@@ -62,6 +70,9 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<AddressDTO> getAddressesByUser(User user) {
+
+        log.info("Obtaining addresses for user: {}", user.getUsername());
+
         List<Address> addresses = user.getAddresses();
 
         return addresses.stream()
@@ -71,6 +82,9 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressDTO updateAddress(Long id, AddressRequest request) {
+
+        log.info("Process to update address with ID: {}", id);
+
         Address existingAddress = addressRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("Address", "id", id)
         );
@@ -89,11 +103,17 @@ public class AddressServiceImpl implements AddressService {
 
         userRepository.save(user);
 
+        log.info("Address with ID: {} updated successfully", 
+            existingAddress.getId());
+
         return AddressMapper.INSTANCE.toDTO(updatedAddress);
     }
 
     @Override
     public void deleteAddress(Long addressId) {
+
+        log.info("Deleting address with ID: {} ...", addressId);
+
         Address existingAddress = addressRepository.findById(addressId).orElseThrow(
             () -> new ResourceNotFoundException("Address", "id", addressId)
         );
@@ -101,6 +121,9 @@ public class AddressServiceImpl implements AddressService {
         User user = existingAddress.getUser();
         user.getAddresses().removeIf(a -> a.getId().equals(addressId));
         userRepository.save(user);
+
+        log.info("Address removed, ID: {} username {}", 
+            addressId, user.getUsername());
 
         addressRepository.delete(existingAddress);
     }

@@ -3,7 +3,6 @@ package io.github.gabrielhe4.shop_api.service;
 import java.util.List;
 
 import io.github.gabrielhe4.shop_api.dto.CartDTO;
-import jakarta.transaction.Transactional;
 
 public interface CartService {
 
@@ -13,7 +12,6 @@ public interface CartService {
 
     CartDTO getCart();
 
-    @Transactional
     CartDTO updateProductQuantityInCart(Long productId, Integer quantity);
 
     String deleteProductFromCart(Long productId);

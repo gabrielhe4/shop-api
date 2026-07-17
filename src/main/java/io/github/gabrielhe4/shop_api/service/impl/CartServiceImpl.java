@@ -19,6 +19,7 @@ import io.github.gabrielhe4.shop_api.repository.CartRepository;
 import io.github.gabrielhe4.shop_api.repository.ProductRepository;
 import io.github.gabrielhe4.shop_api.service.CartService;
 import io.github.gabrielhe4.shop_api.util.AuthUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -151,16 +152,15 @@ public class CartServiceImpl implements CartService {
 
     }
 
+    @Transactional
     @Override
     public CartDTO updateProductQuantityInCart(Long productId, Integer quantity) {
         
         String email = authUtil.getLoggedInEmail();
         Cart userCart = cartRepository.findCartByEmail(email);
-        Long cartId = userCart.getId();
-
-         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Cart", "cartId", cartId));
+        
+        if (userCart == null)
+            throw new APIException("User does not have a cart");
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
@@ -173,7 +173,7 @@ public class CartServiceImpl implements CartService {
                 product.getName(), product.getQuantity())
             );
 
-         CartItem cartItem = cartItemRepository.findCartItemByProductIdAndCartId(productId, cartId);
+        CartItem cartItem = cartItemRepository.findCartItemByProductIdAndCartId(productId, userCart.getId());
 
         if (cartItem == null)
             throw new APIException(String.format("Product %s not available in the cart!!!", product.getName()));
@@ -189,16 +189,16 @@ public class CartServiceImpl implements CartService {
             cartItem.setProductPrice(product.getSpecialPrice());
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
             cartItem.setDiscount(product.getDiscount());
-            cart.setTotalPrice(cart.getTotalPrice() + (cartItem.getProductPrice() * quantity));
-            cartRepository.save(cart);
+            userCart.setTotalPrice(userCart.getTotalPrice() + (cartItem.getProductPrice() * quantity));
+            cartRepository.save(userCart);
         }
 
         CartItem updatedItem = cartItemRepository.save(cartItem);
         if (updatedItem.getQuantity() == 0)
             cartItemRepository.deleteById(updatedItem.getId());
 
-        return new CartDTO(cart.getId(), cart.getTotalPrice(),
-                cart.getCartItems().stream()
+        return new CartDTO(userCart.getId(), userCart.getTotalPrice(),
+                userCart.getCartItems().stream()
                         .map(item -> {
                             ProductDTO dto = ProductMapper.INSTANCE.toDTO(item.getProduct());
                             dto.setQuantity(item.getQuantity());
@@ -211,24 +211,26 @@ public class CartServiceImpl implements CartService {
     @Override
     public String deleteProductFromCart(Long productId) {
 
+        log.info("Preparing to remove product...");
         String email = authUtil.getLoggedInEmail();
-        Cart userCart = cartRepository.findCartByEmail(email);
-        Long cartId = userCart.getId();
-        
-        Cart cart = cartRepository.findById(productId).orElseThrow(
-            () -> new ResourceNotFoundException("Cart", "cartId", cartId)
-        );
+        Cart cart = cartRepository.findCartByEmail(email);
 
-        CartItem cartItem = cartItemRepository.findCartItemByProductIdAndCartId(productId, cartId);
+        if (cart == null)
+            throw new APIException("User does not have a cart");
+
+        CartItem cartItem = cartItemRepository.findCartItemByProductIdAndCartId(productId, cart.getId());
 
         if (cartItem == null)
             throw new ResourceNotFoundException("Product", "product", productId);
 
         cart.setTotalPrice(cart.getTotalPrice() - (cartItem.getProductPrice() * cartItem.getQuantity()));
 
-        cartItemRepository.deleteCartItemByProductIdAndCartId(cartId, productId);
+        String productName = cartItem.getProduct().getName();
 
-        return String.format("Product %s were removed from the cart", cartItem.getProduct().getName());
+        cartItemRepository.deleteCartItemByProductIdAndCartId(cart.getId(), productId);
+
+        log.info("Product removed from cart: {}", productName);
+        return String.format("Product %s were removed from the cart", productName);
     }
 
     @Override

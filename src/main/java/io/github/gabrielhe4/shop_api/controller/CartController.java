@@ -9,8 +9,6 @@ import io.github.gabrielhe4.shop_api.dto.CartRequest;
 import io.github.gabrielhe4.shop_api.service.CartService;
 import jakarta.validation.Valid;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

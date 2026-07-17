@@ -105,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
             productRepository.save(product);
 
             // clear cart
-            cartService.deleteProductFromCart(cart.getId(), item.getProduct().getId());
+            cartService.deleteProductFromCart(item.getProduct().getId());
         });
 
         return buildDTO(savedOrder);

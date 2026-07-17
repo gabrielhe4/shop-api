@@ -127,20 +127,22 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDTO getCart() {
+        
         String email = authUtil.getLoggedInEmail();
         Cart cart = cartRepository.findCartByEmail(email);
-        Cart newCart = cartRepository.findCartByEmailAndCartId(email, cart.getId());
+        log.info("Obtaining user cart...");
         
-        if (newCart == null)
-            throw new ResourceNotFoundException("Cart", "cartId", cart.getId());
+        if (cart == null)
+            throw new APIException("User does not have a cart");
 
-        // TODO 
-        return new CartDTO(newCart.getId(), cart.getTotalPrice(), 
-            cart.getCartItems()
-                .stream()
+        CartDTO dto = new CartDTO(cart.getId(), cart.getTotalPrice(),
+            cart.getCartItems().stream()
                 .map(item -> ProductMapper.INSTANCE.toDTO(item.getProduct()))
                 .toList()
         );
+
+        return dto;
+
     }
 
     @Override
@@ -236,17 +238,13 @@ public class CartServiceImpl implements CartService {
 
         CartItem cartItem = cartItemRepository.findCartItemByProductIdAndCartId(productId, cartId);
 
-
-         if (cartItem == null)
+        if (cartItem == null)
             throw new APIException("Product " + product.getName() + " not available in the cart");
 
         double cartPrice = cart.getTotalPrice() - (cartItem.getProductPrice() * cartItem.getQuantity());
-
         cartItem.setProductPrice(product.getSpecialPrice());
-
         cart.setTotalPrice(cartPrice + (cartItem.getProductPrice() * cartItem.getQuantity()));
-
-        cartItem = cartItemRepository.save(cartItem);
+        cartItemRepository.save(cartItem);
 
     }
 

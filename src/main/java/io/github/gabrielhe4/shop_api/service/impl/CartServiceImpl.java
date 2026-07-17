@@ -83,6 +83,8 @@ public class CartServiceImpl implements CartService {
             .map(item -> {
                 ProductDTO dto = ProductMapper.INSTANCE.toDTO(item.getProduct());
                 dto.setQuantity(item.getQuantity());
+                log.debug("Product name: {}", dto.getName());
+                log.debug("Product quantity: {}", dto.getQuantity());
                 return dto;
             })
             .toList();
@@ -137,7 +139,11 @@ public class CartServiceImpl implements CartService {
 
         CartDTO dto = new CartDTO(cart.getId(), cart.getTotalPrice(),
             cart.getCartItems().stream()
-                .map(item -> ProductMapper.INSTANCE.toDTO(item.getProduct()))
+                .map(item -> {
+                    ProductDTO productDTO = ProductMapper.INSTANCE.toDTO(item.getProduct());
+                    productDTO.setQuantity(item.getQuantity());
+                    return productDTO;
+                })
                 .toList()
         );
 

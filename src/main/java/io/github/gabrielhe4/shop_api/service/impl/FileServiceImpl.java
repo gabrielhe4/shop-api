@@ -23,11 +23,11 @@ public class FileServiceImpl implements FileService {
         log.info("Uploading image...");
 
         String originalFilename = file.getOriginalFilename();
-
         String randomId = UUID.randomUUID().toString();
         String fileName = randomId.concat(
             originalFilename.substring(
-                originalFilename.indexOf(randomId))
+                originalFilename.lastIndexOf('.')
+            )
         );
 
         String filePath = path +  File.separator + fileName;

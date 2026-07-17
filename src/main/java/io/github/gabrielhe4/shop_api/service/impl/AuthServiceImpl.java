@@ -103,6 +103,8 @@ public class AuthServiceImpl implements AuthService {
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetailsImpl);
 
+        log.info("User is authenticated!!!");
+
         List<String> roles = userDetailsImpl.getAuthorities()
                                 .stream()
                                 .map(item -> item.getAuthority())

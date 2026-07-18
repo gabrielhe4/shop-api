@@ -98,10 +98,12 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orderItems = orderItemRepository.saveAll(orderItems);
+        savedOrder.setOrderItems(orderItems);
+        orderRepository.save(savedOrder);
 
         cart.getCartItems().forEach(item -> {
             Product product = item.getProduct();
-            product.setQuantity(product.getQuantity() - item.getQuantity());
+            product.setStock(product.getStock() - item.getQuantity());
             productRepository.save(product);
 
             // clear cart
@@ -128,8 +130,11 @@ public class OrderServiceImpl implements OrderService {
             .orderId(entity.getId())
             .addressId(entity.getAddress().getId())
             .email(entity.getEmail())
+            .totalAmount(entity.getTotalAmount())
+            .orderStatus(entity.getOrderStatus())
             .payment(paymentDTO)
             .orderItems(orderItems)
+            .orderDate(entity.getOrderDate())
             .build();
     }
 

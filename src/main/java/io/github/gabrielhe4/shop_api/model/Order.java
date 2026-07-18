@@ -38,6 +38,7 @@ public class Order {
     @Column(nullable = false)
     private String email;
 
+    @Setter
     @OneToMany(mappedBy = "order", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<OrderItem> orderItems;
 

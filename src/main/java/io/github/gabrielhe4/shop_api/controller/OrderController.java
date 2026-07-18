@@ -27,7 +27,7 @@ public class OrderController {
         this.authUtil = authUtil; 
     }
 
-    @PostMapping("/order/users/payments/{paymentMethod}")
+    @PostMapping("/user/order/payments/{paymentMethod}")
     public ResponseEntity<OrderDTO> orderProducts(@PathVariable String paymentMethod, @RequestBody OrderRequestDTO orderRequestDTO) {
         String email = authUtil.getLoggedInEmail();
         var response = orderService.placeOrder(email, paymentMethod, orderRequestDTO);

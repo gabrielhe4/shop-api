@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import io.github.gabrielhe4.shop_api.dto.OrderDTO;
 import io.github.gabrielhe4.shop_api.dto.OrderItemDTO;
-import io.github.gabrielhe4.shop_api.dto.OrderRequestDTO;
+import io.github.gabrielhe4.shop_api.dto.OrderRequest;
 import io.github.gabrielhe4.shop_api.dto.PaymentDTO;
 import io.github.gabrielhe4.shop_api.exception.APIException;
 import io.github.gabrielhe4.shop_api.exception.ResourceNotFoundException;
@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDTO placeOrder(String email, String paymentMethod, OrderRequestDTO request) {
+    public OrderDTO placeOrder(String email, String paymentMethod, OrderRequest request) {
 
         Cart cart = cartRepository.findCartByEmail(email);
 

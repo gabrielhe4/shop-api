@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.gabrielhe4.shop_api.dto.OrderDTO;
-import io.github.gabrielhe4.shop_api.dto.OrderRequestDTO;
+import io.github.gabrielhe4.shop_api.dto.OrderRequest;
 import io.github.gabrielhe4.shop_api.service.OrderService;
 import io.github.gabrielhe4.shop_api.util.AuthUtil;
 
@@ -28,9 +28,9 @@ public class OrderController {
     }
 
     @PostMapping("/user/order/payments/{paymentMethod}")
-    public ResponseEntity<OrderDTO> orderProducts(@PathVariable String paymentMethod, @RequestBody OrderRequestDTO orderRequestDTO) {
+    public ResponseEntity<OrderDTO> orderProducts(@PathVariable String paymentMethod, @RequestBody OrderRequest orderRequest) {
         String email = authUtil.getLoggedInEmail();
-        var response = orderService.placeOrder(email, paymentMethod, orderRequestDTO);
+        var response = orderService.placeOrder(email, paymentMethod, orderRequest);
         
         return ResponseEntity
                 .status(HttpStatus.CREATED)

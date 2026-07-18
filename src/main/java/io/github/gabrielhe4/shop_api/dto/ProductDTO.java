@@ -14,7 +14,7 @@ public class ProductDTO {
     String image;
 
     @Setter
-    Integer quantity;
+    Integer stock;
 
     Double price;
     Double discount;

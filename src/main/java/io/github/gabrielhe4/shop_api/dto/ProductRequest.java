@@ -13,8 +13,8 @@ public record ProductRequest(
     @Size(min = 10, max = 200, message = "Product description must be between 10 and 200 characters")
     String description,
     
-    @NotNull(message = "Quantity is required")
-    Integer quantity,
+    @NotNull(message = "Stock is required")
+    Integer stock,
 
     @NotNull(message = "Price is required")
     Double price,

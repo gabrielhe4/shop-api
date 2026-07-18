@@ -2,17 +2,17 @@ package io.github.gabrielhe4.shop_api.service;
 
 import java.util.List;
 
-import io.github.gabrielhe4.shop_api.dto.CartDTO;
+import io.github.gabrielhe4.shop_api.dto.CartResponse;
 
 public interface CartService {
 
-    CartDTO addProductToCart(Long productId, Integer quantity);
+    CartResponse addProductToCart(Long productId, Integer quantity);
 
-    List<CartDTO> getAllCarts();
+    List<CartResponse> getAllCarts();
 
-    CartDTO getCart();
+    CartResponse getCart();
 
-    CartDTO updateProductQuantityInCart(Long productId, Integer quantity);
+    CartResponse updateProductQuantityInCart(Long productId, Integer quantity);
 
     String deleteProductFromCart(Long productId);
 

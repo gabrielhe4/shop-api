@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.gabrielhe4.shop_api.dto.CartDTO;
+import io.github.gabrielhe4.shop_api.dto.CartResponse;
 import io.github.gabrielhe4.shop_api.dto.CartRequest;
 import io.github.gabrielhe4.shop_api.service.CartService;
 import jakarta.validation.Valid;
@@ -31,7 +31,7 @@ public class CartController {
     }
 
     @PostMapping("/cart/products")
-    public ResponseEntity<CartDTO> addProductToCart(
+    public ResponseEntity<CartResponse> addProductToCart(
         @Valid @RequestBody CartRequest request
     ) {
         
@@ -42,16 +42,16 @@ public class CartController {
 
     /*
     @GetMapping("/carts")
-    public ResponseEntity<List<CartDTO>> getCarts() {
+    public ResponseEntity<List<CartResponse>> getCarts() {
         
-        List<CartDTO> carts = cartService.getAllCarts();
+        List<CartResponse> carts = cartService.getAllCarts();
 
         return ResponseEntity.ok(carts);
     }
     */
 
     @GetMapping("/cart/user")
-    public ResponseEntity<CartDTO> getCartById() {
+    public ResponseEntity<CartResponse> getCartById() {
         
         var response = cartService.getCart();
 
@@ -61,7 +61,7 @@ public class CartController {
 
     // in operation send add -> to add :P
     @PutMapping("/cart/products/{productId}")
-    public ResponseEntity<CartDTO> updateCartProduct(@PathVariable Long productId,
+    public ResponseEntity<CartResponse> updateCartProduct(@PathVariable Long productId,
             @RequestParam("operation") String operation) {
 
         var response = cartService.updateProductQuantityInCart(productId,

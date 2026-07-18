@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Service;
 
-import io.github.gabrielhe4.shop_api.dto.CartDTO;
+import io.github.gabrielhe4.shop_api.dto.CartResponse;
 import io.github.gabrielhe4.shop_api.dto.ProductDTO;
 import io.github.gabrielhe4.shop_api.exception.APIException;
 import io.github.gabrielhe4.shop_api.exception.ResourceNotFoundException;
@@ -35,7 +35,7 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public CartDTO addProductToCart(Long productId, Integer quantity) {
+    public CartResponse addProductToCart(Long productId, Integer quantity) {
         Cart cart = createCart();
         
         Product product = productRepository.findById(productId).orElseThrow(
@@ -47,12 +47,12 @@ public class CartServiceImpl implements CartService {
         if (cartItem != null)
             throw new APIException(String.format("Product %s already exists!!!", product.getName()));
 
-        if (product.getQuantity() == 0)
+        if (product.getStock() == 0)
             throw new APIException(String.format("Product %s is out of stock!!!", product.getName()));
 
-        if (product.getQuantity() < quantity)
+        if (product.getStock() < quantity)
             throw new APIException(String.format("Product %s only has %d available!!!", 
-                product.getName(), product.getQuantity()));
+                product.getName(), product.getStock()));
 
         log.info("Creating new cart item ->");
 
@@ -68,7 +68,7 @@ public class CartServiceImpl implements CartService {
 
         log.debug("Cart item created: {}", newCartItem);
 
-        product.setQuantity(product.getQuantity());
+        product.setStock(product.getStock());
 
         cart.setTotalPrice(cart.getTotalPrice() + (product.getSpecialPrice() * quantity));
 
@@ -83,16 +83,14 @@ public class CartServiceImpl implements CartService {
         List<ProductDTO> productsDto = cartItems.stream()
             .map(item -> {
                 ProductDTO dto = ProductMapper.INSTANCE.toDTO(item.getProduct());
-                dto.setQuantity(item.getQuantity());
-                log.debug("Product name: {}", dto.getName());
-                log.debug("Product quantity: {}", dto.getQuantity());
+                dto.setStock(item.getQuantity());
                 return dto;
             })
             .toList();
 
         log.info("Cart items added in cart: " + productsDto.size());
         
-        return new CartDTO(cart.getId(), 
+        return new CartResponse(cart.getId(), 
                 cart.getTotalPrice(),
                 productsDto
             );
@@ -111,14 +109,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<CartDTO> getAllCarts() {
+    public List<CartResponse> getAllCarts() {
         List<Cart> carts = cartRepository.findAll();
 
         if (carts.isEmpty())
             return List.of();
 
         return carts.stream()
-                .map(cart -> new CartDTO(cart.getId(), cart.getTotalPrice(), 
+                .map(cart -> new CartResponse(cart.getId(), cart.getTotalPrice(), 
                     cart.getCartItems()
                         .stream()
                         .map(item -> ProductMapper.INSTANCE.toDTO(item.getProduct()))
@@ -129,20 +127,20 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDTO getCart() {
-        
+    public CartResponse getCart() {
+
         String email = authUtil.getLoggedInEmail();
         Cart cart = cartRepository.findCartByEmail(email);
-        log.info("Obtaining user cart...");
+        log.info("Obtaining cart from user {}", authUtil.getLoggedInUser());
         
         if (cart == null)
             throw new APIException("User does not have a cart");
 
-        CartDTO dto = new CartDTO(cart.getId(), cart.getTotalPrice(),
+        CartResponse dto = new CartResponse(cart.getId(), cart.getTotalPrice(),
             cart.getCartItems().stream()
                 .map(item -> {
                     ProductDTO productDTO = ProductMapper.INSTANCE.toDTO(item.getProduct());
-                    productDTO.setQuantity(item.getQuantity());
+                    productDTO.setStock(item.getQuantity());
                     return productDTO;
                 })
                 .toList()
@@ -154,7 +152,7 @@ public class CartServiceImpl implements CartService {
 
     @Transactional
     @Override
-    public CartDTO updateProductQuantityInCart(Long productId, Integer quantity) {
+    public CartResponse updateProductQuantityInCart(Long productId, Integer quantity) {
         
         String email = authUtil.getLoggedInEmail();
         Cart userCart = cartRepository.findCartByEmail(email);
@@ -165,12 +163,12 @@ public class CartServiceImpl implements CartService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
-        if (product.getQuantity() == 0)
+        if (product.getStock() == 0)
             throw new APIException(product.getName() + " is not available");
 
-        if (product.getQuantity() < quantity)
+        if (product.getStock() < quantity)
             throw new APIException(String.format("Please, make an order of the %s less than or equal to the quantity %s.", 
-                product.getName(), product.getQuantity())
+                product.getName(), product.getStock())
             );
 
         CartItem cartItem = cartItemRepository.findCartItemByProductIdAndCartId(productId, userCart.getId());
@@ -197,11 +195,11 @@ public class CartServiceImpl implements CartService {
         if (updatedItem.getQuantity() == 0)
             cartItemRepository.deleteById(updatedItem.getId());
 
-        return new CartDTO(userCart.getId(), userCart.getTotalPrice(),
+        return new CartResponse(userCart.getId(), userCart.getTotalPrice(),
                 userCart.getCartItems().stream()
                         .map(item -> {
                             ProductDTO dto = ProductMapper.INSTANCE.toDTO(item.getProduct());
-                            dto.setQuantity(item.getQuantity());
+                            dto.setStock(item.getQuantity());
                             return dto;
                         })
                         .toList());

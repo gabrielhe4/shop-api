@@ -7,10 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import io.github.gabrielhe4.shop_api.dto.CartResponse;
-import io.github.gabrielhe4.shop_api.dto.ProductDTO;
+import io.github.gabrielhe4.shop_api.dto.ItemResponse;
 import io.github.gabrielhe4.shop_api.exception.APIException;
 import io.github.gabrielhe4.shop_api.exception.ResourceNotFoundException;
-import io.github.gabrielhe4.shop_api.mapper.ProductMapper;
 import io.github.gabrielhe4.shop_api.model.Cart;
 import io.github.gabrielhe4.shop_api.model.CartItem;
 import io.github.gabrielhe4.shop_api.model.Product;
@@ -80,19 +79,15 @@ public class CartServiceImpl implements CartService {
 
         log.debug("Updating cart with id: {}", cart.getId());
 
-        List<ProductDTO> productsDto = cartItems.stream()
-            .map(item -> {
-                ProductDTO dto = ProductMapper.INSTANCE.toDTO(item.getProduct());
-                dto.setStock(item.getQuantity());
-                return dto;
-            })
+        List<ItemResponse> items = cartItems.stream()
+            .map(i -> ItemResponse.from(i))
             .toList();
 
-        log.info("Cart items added in cart: " + productsDto.size());
+        log.info("Cart items added in cart: " + items.size());
         
         return new CartResponse(cart.getId(), 
                 cart.getTotalPrice(),
-                productsDto
+                items
             );
 
     }
@@ -119,7 +114,7 @@ public class CartServiceImpl implements CartService {
                 .map(cart -> new CartResponse(cart.getId(), cart.getTotalPrice(), 
                     cart.getCartItems()
                         .stream()
-                        .map(item -> ProductMapper.INSTANCE.toDTO(item.getProduct()))
+                        .map(item -> ItemResponse.from(item))
                         .toList()
                 ))
                 .toList();
@@ -138,11 +133,7 @@ public class CartServiceImpl implements CartService {
 
         CartResponse dto = new CartResponse(cart.getId(), cart.getTotalPrice(),
             cart.getCartItems().stream()
-                .map(item -> {
-                    ProductDTO productDTO = ProductMapper.INSTANCE.toDTO(item.getProduct());
-                    productDTO.setStock(item.getQuantity());
-                    return productDTO;
-                })
+                .map(item -> ItemResponse.from(item))
                 .toList()
         );
 
@@ -156,6 +147,7 @@ public class CartServiceImpl implements CartService {
         
         String email = authUtil.getLoggedInEmail();
         Cart userCart = cartRepository.findCartByEmail(email);
+        log.info("Updating cart of user: {}", authUtil.getLoggedInUser());
         
         if (userCart == null)
             throw new APIException("User does not have a cart");
@@ -189,19 +181,18 @@ public class CartServiceImpl implements CartService {
             cartItem.setDiscount(product.getDiscount());
             userCart.setTotalPrice(userCart.getTotalPrice() + (cartItem.getProductPrice() * quantity));
             cartRepository.save(userCart);
+            log.info("Updating the quantity of the product {} to {}", product.getName(), cartItem.getQuantity());
         }
 
         CartItem updatedItem = cartItemRepository.save(cartItem);
         if (updatedItem.getQuantity() == 0)
             cartItemRepository.deleteById(updatedItem.getId());
 
+        log.info("Cart item was updated successfully.");
+
         return new CartResponse(userCart.getId(), userCart.getTotalPrice(),
                 userCart.getCartItems().stream()
-                        .map(item -> {
-                            ProductDTO dto = ProductMapper.INSTANCE.toDTO(item.getProduct());
-                            dto.setStock(item.getQuantity());
-                            return dto;
-                        })
+                        .map(item -> ItemResponse.from(item))
                         .toList());
         
     }

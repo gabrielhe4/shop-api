@@ -59,7 +59,7 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
-        return authConfig.getAuthenticationManager();
+    return authConfig.getAuthenticationManager();
     }
     
     @Bean
@@ -74,6 +74,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/test/**").permitAll()
                     .requestMatchers("/images/**").permitAll()
                     .requestMatchers("/api/public/**").permitAll()
+                    //.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                     .anyRequest().authenticated()
             );
         

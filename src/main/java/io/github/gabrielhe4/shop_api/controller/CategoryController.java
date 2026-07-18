@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.gabrielhe4.shop_api.config.AppConstants;
 import io.github.gabrielhe4.shop_api.dto.CategoryDTO;
-import io.github.gabrielhe4.shop_api.dto.CategoryRequestDTO;
+import io.github.gabrielhe4.shop_api.dto.CategoryRequest;
 import io.github.gabrielhe4.shop_api.dto.PaginatedCategoryResponse;
 import io.github.gabrielhe4.shop_api.service.CategoryService;
 import jakarta.validation.Valid;
@@ -33,7 +33,7 @@ public class CategoryController {
     }
 
     @PostMapping("/admin/category")
-    public ResponseEntity<Void> createCategory(@Valid @RequestBody CategoryRequestDTO request) {
+    public ResponseEntity<Void> createCategory(@Valid @RequestBody CategoryRequest request) {
         
         categoryService.createCategory(request);
 
@@ -41,7 +41,7 @@ public class CategoryController {
     }
 
     @PutMapping("/admin/categories/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequestDTO request) {
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequest request) {
         
         CategoryDTO response = categoryService.updateCategory(id, request);
         

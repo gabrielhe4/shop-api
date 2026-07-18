@@ -6,7 +6,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import io.github.gabrielhe4.shop_api.dto.CategoryDTO;
-import io.github.gabrielhe4.shop_api.dto.CategoryRequestDTO;
+import io.github.gabrielhe4.shop_api.dto.CategoryRequest;
 import io.github.gabrielhe4.shop_api.model.Category;
 
 @Mapper(componentModel = "spring")
@@ -15,10 +15,10 @@ public interface CategoryMapper {
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
     @Mapping(target = "id", ignore = true)
-    Category toNewEntity(CategoryRequestDTO request);
+    Category toNewEntity(CategoryRequest request);
 
     void updateEntity(
-        CategoryRequestDTO request,
+        CategoryRequest request,
         @MappingTarget Category category
     );
 

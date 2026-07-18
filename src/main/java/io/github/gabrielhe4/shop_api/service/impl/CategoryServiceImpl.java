@@ -11,7 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import io.github.gabrielhe4.shop_api.dto.CategoryDTO;
-import io.github.gabrielhe4.shop_api.dto.CategoryRequestDTO;
+import io.github.gabrielhe4.shop_api.dto.CategoryRequest;
 import io.github.gabrielhe4.shop_api.dto.PaginatedCategoryResponse;
 import io.github.gabrielhe4.shop_api.exception.ResourceNotFoundException;
 import io.github.gabrielhe4.shop_api.mapper.CategoryMapper;
@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void createCategory(CategoryRequestDTO request) {
+    public void createCategory(CategoryRequest request) {
 
         log.info("Creating new category...");
 
@@ -41,7 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO updateCategory(Long id, CategoryRequestDTO request) {
+    public CategoryDTO updateCategory(Long id, CategoryRequest request) {
         
         log.info("Updating category with ID: {}", id);
 

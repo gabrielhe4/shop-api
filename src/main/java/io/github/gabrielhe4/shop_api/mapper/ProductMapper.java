@@ -14,6 +14,9 @@ public interface ProductMapper {
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "specialPrice", ignore = true)
     Product toEntity(ProductRequest request);
 
     ProductDTO toDTO(Product product);

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import io.github.gabrielhe4.shop_api.dto.OrderDTO;
@@ -30,6 +32,7 @@ import io.github.gabrielhe4.shop_api.repository.PaymentRepository;
 import io.github.gabrielhe4.shop_api.repository.ProductRepository;
 import io.github.gabrielhe4.shop_api.service.CartService;
 import io.github.gabrielhe4.shop_api.service.OrderService;
+import io.github.gabrielhe4.shop_api.util.AuthUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -44,10 +47,15 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final CartService cartService;
+    private final AuthUtil authUtil;
+
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Override
     @Transactional
     public OrderDTO placeOrder(String email, String paymentMethod, OrderRequest request) {
+
+        log.info("Place order for user: {}", authUtil.getLoggedInUser());
 
         Cart cart = cartRepository.findCartByEmail(email);
 
@@ -79,10 +87,13 @@ public class OrderServiceImpl implements OrderService {
         payment = paymentRepository.save(payment);
         order.setPayment(payment);
         Order savedOrder = orderRepository.save(order);
+        log.info("Payment method added successfully.");
 
         List<CartItem> cartItems = cart.getCartItems();
         if (cartItems.isEmpty())
             throw new APIException("Cart is empty");
+
+        log.info("Total items added in cart: {}", cartItems.size());
 
         List<OrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem : cartItems) {
@@ -109,6 +120,9 @@ public class OrderServiceImpl implements OrderService {
             // clear cart
             cartService.deleteProductFromCart(item.getProduct().getId());
         });
+        log.info("Users cart was cleaned");
+
+        log.info("Order created successfully");
 
         return buildDTO(savedOrder);
     }

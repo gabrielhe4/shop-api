@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import io.github.gabrielhe4.shop_api.dto.OrderDTO;
+import io.github.gabrielhe4.shop_api.dto.OrderResponse;
 import io.github.gabrielhe4.shop_api.dto.OrderItemDTO;
 import io.github.gabrielhe4.shop_api.dto.OrderRequest;
 import io.github.gabrielhe4.shop_api.dto.PaymentDTO;
@@ -53,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDTO placeOrder(String email, String paymentMethod, OrderRequest request) {
+    public OrderResponse placeOrder(String email, String paymentMethod, OrderRequest request) {
 
         log.info("Place order for user: {}", authUtil.getLoggedInUser());
 
@@ -128,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    private OrderDTO buildDTO(Order entity) {
+    private OrderResponse buildDTO(Order entity) {
         PaymentDTO paymentDTO = PaymentMapper.INSTANCE.toDTO(entity.getPayment());
 
         List<OrderItemDTO> orderItems = entity.getOrderItems()
@@ -140,7 +140,7 @@ public class OrderServiceImpl implements OrderService {
             })
             .toList();
 
-        return OrderDTO.builder()
+        return OrderResponse.builder()
             .orderId(entity.getId())
             .addressId(entity.getAddress().getId())
             .email(entity.getEmail())

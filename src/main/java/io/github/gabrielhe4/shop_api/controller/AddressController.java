@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.gabrielhe4.shop_api.util.AuthUtil;
 import jakarta.validation.Valid;
-import io.github.gabrielhe4.shop_api.dto.AddressDTO;
+import io.github.gabrielhe4.shop_api.dto.AddressResponse;
 import io.github.gabrielhe4.shop_api.dto.AddressRequest;
 import io.github.gabrielhe4.shop_api.dto.MessageResponse;
 import io.github.gabrielhe4.shop_api.model.User;
@@ -22,11 +22,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Addresses", description = "Address management operations for users")
 public class AddressController {
 
     private final AuthUtil authUtil;
@@ -38,7 +43,18 @@ public class AddressController {
     }
 
     @PostMapping("/addresses")
-    public ResponseEntity<AddressDTO> createdAddress(@Valid @RequestBody AddressRequest request) {
+    @Operation(
+        summary = "Create a new address",
+        description = "Creates a new shipping address for the authenticated user"
+    )
+    @ApiResponse(
+        responseCode = "201",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = AddressResponse.class)
+        )
+    )
+    public ResponseEntity<AddressResponse> createdAddress(@Valid @RequestBody AddressRequest request) {
 
         User user = authUtil.getLoggedInUser();
         var response = addressService.create(request, user);
@@ -48,7 +64,18 @@ public class AddressController {
     }
 
     @GetMapping("/addresses")
-    public ResponseEntity<List<AddressDTO>> getAddresses() {
+    @Operation(
+        summary = "Get all addresses",
+        description = "Returns a list of all addresses in the system"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = List.class)
+        )
+    )
+    public ResponseEntity<List<AddressResponse>> getAddresses() {
         
         var response = addressService.getAllAddresses();
         return ResponseEntity.ok(response);
@@ -56,7 +83,18 @@ public class AddressController {
     }
 
     @GetMapping("/addresses/{addressId}")
-    public ResponseEntity<AddressDTO> getAddressById(@PathVariable Long addressId) { 
+    @Operation(
+        summary = "Get address by ID",
+        description = "Retrieves a specific address by its ID"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = AddressResponse.class)
+        )
+    )
+    public ResponseEntity<AddressResponse> getAddressById(@Parameter(description = "Address ID") @PathVariable Long addressId) { 
         
         var response = addressService.getAddressById(addressId);
         return ResponseEntity.ok(response);
@@ -64,7 +102,18 @@ public class AddressController {
     }
 
     @GetMapping("user/addresses")
-    public ResponseEntity<List<AddressDTO>> getUserAddresses() {
+    @Operation(
+        summary = "Get user's addresses",
+        description = "Returns all addresses for the authenticated user"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = List.class)
+        )
+    )
+    public ResponseEntity<List<AddressResponse>> getUserAddresses() {
 
         User user = authUtil.getLoggedInUser();
         var response = addressService.getAddressesByUser(user);
@@ -73,7 +122,18 @@ public class AddressController {
     }
 
     @PutMapping("/addresses/{id}")
-    public ResponseEntity<AddressDTO> updateAddress(@PathVariable String id, 
+    @Operation(
+        summary = "Update an address",
+        description = "Updates an existing address with new information"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = AddressResponse.class)
+        )
+    )
+    public ResponseEntity<AddressResponse> updateAddress(@Parameter(description = "Address ID") @PathVariable String id, 
         @Valid @RequestBody AddressRequest request) {
         
         var response = addressService.updateAddress(Long.parseLong(id), request);
@@ -82,16 +142,22 @@ public class AddressController {
     }
 
     @DeleteMapping("/addresses/{id}")
-    public ResponseEntity<MessageResponse> deleteAddress(@PathVariable Long id) {
+    @Operation(
+        summary = "Delete an address",
+        description = "Permanently deletes the specified address"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = MessageResponse.class)
+        )
+    )
+    public ResponseEntity<MessageResponse> deleteAddress(@Parameter(description = "Address ID") @PathVariable Long id) {
         
         addressService.deleteAddress(id);
         
         return ResponseEntity.ok(new MessageResponse("Address deleted successfully"));
     }
     
-    
-
-    
-
-
 }

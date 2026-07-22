@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import io.github.gabrielhe4.shop_api.dto.AddressDTO;
+import io.github.gabrielhe4.shop_api.dto.AddressResponse;
 import io.github.gabrielhe4.shop_api.dto.AddressRequest;
 import io.github.gabrielhe4.shop_api.exception.ResourceNotFoundException;
 import io.github.gabrielhe4.shop_api.mapper.AddressMapper;
@@ -31,7 +31,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Transactional
     @Override
-    public AddressDTO create(AddressRequest request, User user) {
+    public AddressResponse create(AddressRequest request, User user) {
 
         log.info("Creating new address...");
 
@@ -52,7 +52,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressDTO> getAllAddresses() {
+    public List<AddressResponse> getAllAddresses() {
         List<Address> addresses = addressRepository.findAll();
 
         return addresses.stream()
@@ -61,7 +61,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressDTO getAddressById(Long id) {
+    public AddressResponse getAddressById(Long id) {
         Address address = addressRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("Address", "id", id));
         
@@ -69,7 +69,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressDTO> getAddressesByUser(User user) {
+    public List<AddressResponse> getAddressesByUser(User user) {
 
         log.info("Obtaining addresses for user: {}", user.getUsername());
 
@@ -81,7 +81,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressDTO updateAddress(Long id, AddressRequest request) {
+    public AddressResponse updateAddress(Long id, AddressRequest request) {
 
         log.info("Process to update address with ID: {}", id);
 

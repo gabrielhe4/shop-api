@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import io.github.gabrielhe4.shop_api.dto.AddressDTO;
+import io.github.gabrielhe4.shop_api.dto.AddressResponse;
 import io.github.gabrielhe4.shop_api.dto.AddressRequest;
 import io.github.gabrielhe4.shop_api.model.Address;
 
@@ -18,7 +18,7 @@ public interface AddressMapper {
     Address toEntity(AddressRequest request);
 
     @Mapping(source = "id", target = "addressId")
-    AddressDTO toDTO(Address entity);
+    AddressResponse toDTO(Address entity);
     
 
 }

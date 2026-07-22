@@ -3,7 +3,23 @@ package io.github.gabrielhe4.shop_api.dto;
 import io.github.gabrielhe4.shop_api.model.Address;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(
+    name = "AddressRequest",
+    implementation = AddressRequest.class,
+    description = "Address information for an address request",
+    example = """
+        {
+            "street": "123 Main St",
+            "buildingName": "Apartment Block A",
+            "city": "New York",
+            "state": "NY",
+            "country": "United States",
+            "zipcode": "10001"
+        }
+    """
+)
 public record AddressRequest (
 
         @NotBlank(message = "Street cannot be blank")

@@ -1,0 +1,26 @@
+info:
+  name: Create address
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/addresses"
+  body:
+    type: json
+    data: |-
+      {
+        "street": "Miguel allende",
+        "buildingName": "no. 4",
+        "city": "Chihuahua",
+        "state": "Chihuahua",
+        "country": "Mexico",
+        "zipcode": "31074"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

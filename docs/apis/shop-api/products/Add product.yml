@@ -1,0 +1,25 @@
+info:
+  name: Add product
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/admin/categories/1/product"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Notebook",
+        "description":"Notebooks with 100 sheets",
+        "stock":100,
+        "price": 5.99,
+        "discount": 10
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

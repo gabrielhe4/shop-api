@@ -52,7 +52,7 @@ public class AuthTokenFilter extends OncePerRequestFilter{
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
         } else {
-            log.error("No JWT found in cookies.");
+            log.trace("No JWT found in cookies.");
         }
 
         filterChain.doFilter(request, response);

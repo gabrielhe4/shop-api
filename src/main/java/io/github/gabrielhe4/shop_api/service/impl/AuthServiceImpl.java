@@ -52,14 +52,14 @@ public class AuthServiceImpl implements AuthService {
         log.info("Registering user with username: {}", request.username());
 
         User user = new User(request.username(), request.email(),
-        passwordEncoder.encode(request.password()));
+                passwordEncoder.encode(request.password()));
 
         Set<String> strRoles = request.roles();
-        Set<Role> roles = new HashSet<>();  
+        Set<Role> roles = new HashSet<>();
 
-         if (strRoles == null) {
+        if (strRoles == null) {
             Role userRole = roleRepository.findByRoleName(AppRole.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Error: Role not found"));
+                    .orElseThrow(() -> new RuntimeException("Error: Role not found"));
 
             roles.add(userRole);
         } else {
@@ -69,19 +69,19 @@ public class AuthServiceImpl implements AuthService {
                 switch (role) {
                     case "admin" -> {
                         Role adminRole = roleRepository.findByRoleName(AppRole.ROLE_ADMIN)
-                            .orElseThrow(() -> new RuntimeException("Error: Role not found"));
+                                .orElseThrow(() -> new RuntimeException("Error: Role not found"));
                         roles.add(adminRole);
                     }
 
                     case "seller" -> {
                         Role sellerRole = roleRepository.findByRoleName(AppRole.ROLE_SELLER)
-                            .orElseThrow(() -> new RuntimeException("Error: Role not found"));
+                                .orElseThrow(() -> new RuntimeException("Error: Role not found"));
                         roles.add(sellerRole);
                     }
 
                     default -> {
                         Role userRole = roleRepository.findByRoleName(AppRole.ROLE_USER)
-                            .orElseThrow(() -> new RuntimeException("Error: Role not found"));
+                                .orElseThrow(() -> new RuntimeException("Error: Role not found"));
 
                         roles.add(userRole);
                     }
@@ -106,21 +106,20 @@ public class AuthServiceImpl implements AuthService {
         log.info("User is authenticated!!!");
 
         List<String> roles = userDetailsImpl.getAuthorities()
-                                .stream()
-                                .map(item -> item.getAuthority())
-                                .toList();
-        
+                .stream()
+                .map(item -> item.getAuthority())
+                .toList();
+
         return new UserInfoDTO(userDetailsImpl.getId(),
-            userDetailsImpl.getUsername(),
-            roles,
-            jwtCookie.toString()
-        );
+                userDetailsImpl.getUsername(),
+                roles,
+                jwtCookie.toString());
     }
 
     @Override
     public String cleanJwtCookie() {
+        log.info("You've been sign out!!!");
         return jwtUtils.cleanJwtCookie().toString();
     }
-
 
 }

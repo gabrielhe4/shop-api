@@ -62,17 +62,17 @@ src/main/java/io/github/gabrielhe4/shop_api
 - Docker
 
 Docker installation:
-https://docs.docker.com/engine/install/ 
+https://docs.docker.com/engine/install/
 
 ## Installation
 
 Start the database locally:
 
 For docker:
-`docker compose -f compose.dev.yaml up -d`
+`docker compose -f compose.dev.yml up -d`
 
 For podman:
-`podman compose -f compose.dev.yaml up -d`
+`podman compose -f compose.dev.yml up -d`
 
 Clone the repository:
 
@@ -83,6 +83,10 @@ cd shop-api
 mvn clean install
 
 mvn spring-boot:run
+
+## Api Documentation
+
+http://localhost:8080/swagger-ui/index.html#/
 
 ## Future Improvements
 

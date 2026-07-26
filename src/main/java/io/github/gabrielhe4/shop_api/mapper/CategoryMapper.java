@@ -18,10 +18,10 @@ public interface CategoryMapper {
     @Mapping(target = "products", ignore = true)
     Category toNewEntity(CategoryRequest request);
 
+    @Mapping(target = "products", ignore = true)
     void updateEntity(
-        CategoryRequest request,
-        @MappingTarget Category category
-    );
+            CategoryRequest request,
+            @MappingTarget Category category);
 
     CategoryDTO toDTO(Category category);
 }

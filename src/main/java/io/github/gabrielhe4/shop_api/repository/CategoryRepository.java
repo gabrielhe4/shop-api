@@ -6,4 +6,6 @@ import io.github.gabrielhe4.shop_api.model.Category;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
+    boolean existsByNameIgnoreCase(String name);
+
 }

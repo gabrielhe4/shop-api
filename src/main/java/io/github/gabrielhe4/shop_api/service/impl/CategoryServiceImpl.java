@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import io.github.gabrielhe4.shop_api.dto.CategoryDTO;
 import io.github.gabrielhe4.shop_api.dto.CategoryRequest;
 import io.github.gabrielhe4.shop_api.dto.PaginatedCategoryResponse;
+import io.github.gabrielhe4.shop_api.exception.ResourceAlreadyExistsException;
 import io.github.gabrielhe4.shop_api.exception.ResourceNotFoundException;
 import io.github.gabrielhe4.shop_api.mapper.CategoryMapper;
 import io.github.gabrielhe4.shop_api.model.Category;
@@ -23,7 +24,7 @@ import io.github.gabrielhe4.shop_api.service.CategoryService;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private static Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
+    private final static Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
@@ -34,6 +35,9 @@ public class CategoryServiceImpl implements CategoryService {
 
         log.info("Creating new category...");
 
+        if (categoryRepository.existsByNameIgnoreCase(request.name()))
+            throw new ResourceAlreadyExistsException("Category", request.name());
+
         Category newCategory = CategoryMapper.INSTANCE.toNewEntity(request);
 
         categoryRepository.save(newCategory);
@@ -42,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDTO updateCategory(Long id, CategoryRequest request) {
-        
+
         log.info("Updating category with ID: {}", id);
 
         Category existingCategory = categoryRepository.findById(id)
@@ -62,34 +66,33 @@ public class CategoryServiceImpl implements CategoryService {
 
         log.info("Obtaining all categories...");
 
-        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) ? 
-            Sort.by(sortBy).ascending() : 
-            Sort.by(sortBy).descending();
+        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sort);
         Page<Category> categoryPage = categoryRepository.findAll(pageDetails);
 
         List<CategoryDTO> categoryDTOs = categoryPage.getContent()
-            .stream()
-            .map(CategoryMapper.INSTANCE::toDTO)
-            .toList();
+                .stream()
+                .map(CategoryMapper.INSTANCE::toDTO)
+                .toList();
 
         var response = PaginatedCategoryResponse.builder()
-            .categories(categoryDTOs)
-            .pageNumber(categoryPage.getNumber())
-            .pageSize(categoryPage.getSize())
-            .totalElements(categoryPage.getTotalElements())
-            .totalPages(categoryPage.getTotalPages())
-            .lastPage(categoryPage.isLast())
-            .build();
-        
+                .categories(categoryDTOs)
+                .pageNumber(categoryPage.getNumber())
+                .pageSize(categoryPage.getSize())
+                .totalElements(categoryPage.getTotalElements())
+                .totalPages(categoryPage.getTotalPages())
+                .lastPage(categoryPage.isLast())
+                .build();
+
         log.info("Returning paginated categories successfully.");
-        
+
         return response;
     }
 
     @Override
-    public void deleteCategory(Long id) { 
+    public void deleteCategory(Long id) {
 
         log.info("Deleting category with ID: {}");
 

@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
         String message = ex.getMessage();
         APIResponse response = new APIResponse(message, false);
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(response);
+                .body(response);
     }
 
     @ExceptionHandler(APIException.class)
@@ -38,7 +38,14 @@ public class GlobalExceptionHandler {
         String message = ex.getMessage();
         APIResponse response = new APIResponse(message, false);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(response);
+                .body(response);
+    }
+
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<APIResponse> resourceAlreadyExistsException(ResourceAlreadyExistsException ex) {
+        String message = ex.getMessage();
+        APIResponse response = new APIResponse(message, false);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
 }

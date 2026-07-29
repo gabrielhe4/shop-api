@@ -33,6 +33,7 @@ public class Category {
     private Long id;
 
     @NotBlank
+    @Column(nullable = false, unique = true)
     private String name;
 
     private String description;

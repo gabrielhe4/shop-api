@@ -43,7 +43,9 @@ public class CategoryController {
             "Categories" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Category created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body or missing required fields")
+            @ApiResponse(responseCode = "400", description = "Invalid request body or missing required fields"),
+            @ApiResponse(responseCode = "409", description = "Category name already registered")
+
     })
     public ResponseEntity<Void> createCategory(@Valid @RequestBody CategoryRequest request) {
 

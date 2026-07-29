@@ -2,9 +2,13 @@ package io.github.gabrielhe4.shop_api.security;
 
 import java.util.Set;
 
+import javax.sql.DataSource;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -75,7 +79,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/user/**").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
@@ -86,8 +91,13 @@ public class WebSecurityConfig {
 
     @Bean
     public CommandLineRunner initData(RoleRepository roleRepository,
-            UserRepository userRepository, PasswordEncoder encoder) {
+            UserRepository userRepository, PasswordEncoder encoder, DataSource dataSource) {
         return args -> {
+            // load categories info
+            ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+            populator.addScript(new ClassPathResource("db/categories.sql"));
+            populator.execute(dataSource);
+
             // Retrieve or create roles
             Role userRole = roleRepository.findByRoleName(AppRole.ROLE_USER)
                     .orElseGet(() -> {

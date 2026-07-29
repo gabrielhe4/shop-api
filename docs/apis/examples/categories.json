@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Electronics",
+    "description": "Devices, gadgets, and electronic accessories for everyday use."
+  },
+  {
+    "name": "Computers",
+    "description": "Laptops, desktops, computer components, and peripherals."
+  },
+  {
+    "name": "Smartphones",
+    "description": "Mobile phones, accessories, and wearable technology."
+  },
+  {
+    "name": "Home & Kitchen",
+    "description": "Furniture, appliances, cookware, and home improvement products."
+  },
+  {
+    "name": "Fashion",
+    "description": "Clothing, shoes, and accessories for men, women, and children."
+  },
+  {
+    "name": "Beauty & Personal Care",
+    "description": "Cosmetics, skincare, haircare, and personal hygiene products."
+  },
+  {
+    "name": "Sports & Outdoors",
+    "description": "Equipment, apparel, and accessories for sports and outdoor activities."
+  },
+  {
+    "name": "Books",
+    "description": "Printed books, eBooks, educational materials, and audiobooks."
+  },
+  {
+    "name": "Toys & Games",
+    "description": "Toys, board games, puzzles, and entertainment products for all ages."
+  },
+  {
+    "name": "Automotive",
+    "description": "Car parts, accessories, maintenance tools, and vehicle care products."
+  },
+  {
+    "name": "Health",
+    "description": "Health products, wellness items, and everyday medical supplies."
+  },
+  {
+    "name": "Pet Supplies",
+    "description": "Food, toys, accessories, and healthcare products for pets."
+  },
+  {
+    "name": "Office Supplies",
+    "description": "Office furniture, stationery, printers, and business essentials."
+  },
+  {
+    "name": "Garden & Outdoor",
+    "description": "Gardening tools, outdoor furniture, plants, and landscaping products."
+  },
+  {
+    "name": "Groceries",
+    "description": "Food, beverages, snacks, and household consumable products."
+  }
+]

@@ -1,6 +1,7 @@
 package io.github.gabrielhe4.shop_api.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Positive;
 
 /**
  * DTO for order creation request.
@@ -22,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 )
 public record OrderRequest(
     @Schema(description = "Address ID", example = "123")
+    @Positive(message = "Address id must be a positive value")
     Long addressId,
     @Schema(description = "Payment Method", example = "CARD")
     String paymentMethod,

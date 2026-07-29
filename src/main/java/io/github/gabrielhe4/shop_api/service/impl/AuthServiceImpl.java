@@ -66,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
             // admin --> ROLE_ADMIN
             // seller --> ROLE_USER
             strRoles.forEach(role -> {
-                switch (role) {
+                switch (role.toLowerCase()) {
                     case "admin" -> {
                         Role adminRole = roleRepository.findByRoleName(AppRole.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role not found"));

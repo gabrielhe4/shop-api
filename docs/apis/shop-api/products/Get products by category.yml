@@ -5,7 +5,20 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/api/public/categories/1/products"
+  url: "{{baseUrl}}/api/public/categories/1/products?pageNumber=0&pageSize=10&sortBy=id&sortOrder=asc"
+  params:
+    - name: pageNumber
+      value: "0"
+      type: query
+    - name: pageSize
+      value: "10"
+      type: query
+    - name: sortBy
+      value: id
+      type: query
+    - name: sortOrder
+      value: asc
+      type: query
   auth: inherit
 
 settings:

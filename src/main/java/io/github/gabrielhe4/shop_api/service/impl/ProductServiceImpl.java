@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService{
     @Value("${project.image}")
     private String path;
 
-    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, 
+    public ProductServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository,
             FileService fileService) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
@@ -45,14 +45,15 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDTO addProduct(Long categoryId, ProductRequest request) {
+    public ProductDTO addProduct(ProductRequest request) {
         log.info("Adding a new product...");
-       
+        Long categoryId = request.categoryId();
+
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
         double specialPrice = request.price() - ((request.discount() * 0.01) * request.price());
-        
+
         Product product = ProductMapper.INSTANCE.toEntity(request);
 
         log.info("Setting default image for product...");
@@ -70,7 +71,7 @@ public class ProductServiceImpl implements ProductService{
     public PaginatedProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy,
             String sortOrder) {
         log.info("Obtaining all products...");
-        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) 
+        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name())
             ? Sort.by(sortBy).ascending()
             : Sort.by(sortBy).descending();
 
@@ -81,7 +82,7 @@ public class ProductServiceImpl implements ProductService{
         log.info("Retrieving paginated products");
 
         return response;
-            
+
     }
 
     @Override
@@ -89,7 +90,7 @@ public class ProductServiceImpl implements ProductService{
             String sortBy, String sortOrder) {
 
         log.info("Obtaining all products by category...");
-        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) 
+        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name())
             ? Sort.by(sortBy).ascending()
             : Sort.by(sortBy).descending();
 
@@ -110,7 +111,7 @@ public class ProductServiceImpl implements ProductService{
             String sortOrder) {
 
         log.info("Obtaining all products by keyword...");
-        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) 
+        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name())
             ? Sort.by(sortBy).ascending()
             : Sort.by(sortBy).descending();
 
@@ -124,20 +125,25 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDTO updateProduct(Long productId, ProductDTO product) {
-        
+    public ProductDTO updateProduct(Long productId, ProductRequest product) {
+
         log.info("Updating product with ID: {}", productId);
+
         Product existingProduct = productRepository.findById(productId)
             .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
-        double specialPrice = product.getPrice() - ((product.getDiscount() * 0.01) * product.getPrice());
+        Category category = categoryRepository.findById(product.categoryId())
+            .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", product.categoryId()));
 
-        existingProduct.setName(product.getName());
-        existingProduct.setDescription(product.getDescription());
-        existingProduct.setStock(product.getStock());
-        existingProduct.setPrice(product.getPrice());
-        existingProduct.setDiscount(product.getDiscount());
+        double specialPrice = product.price() - ((product.discount() * 0.01) * product.price());
+
+        existingProduct.setName(product.name());
+        existingProduct.setDescription(product.description());
+        existingProduct.setStock(product.stock());
+        existingProduct.setPrice(product.price());
+        existingProduct.setDiscount(product.discount());
         existingProduct.setSpecialPrice(specialPrice);
+        existingProduct.setCategory(category);
 
         productRepository.save(existingProduct);
         log.info("Product with ID: {} was updated successfully.", productId);
@@ -147,7 +153,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     private PaginatedProductResponse buildPaginatedResponse(Page<Product> productPage) {
-        
+
         List<ProductDTO> productDTOs = productPage.getContent()
             .stream()
             .map(ProductMapper.INSTANCE::toDTO)
@@ -161,7 +167,7 @@ public class ProductServiceImpl implements ProductService{
             .totalPages(productPage.getTotalPages())
             .lastPage(productPage.isLast())
             .build();
-            
+
     }
 
     @Override
@@ -184,7 +190,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public void deleteProduct(Long productId) {
-        
+
         log.info("Deleting product with ID: {}", productId);
         Product existingProduct = productRepository.findById(productId)
             .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));

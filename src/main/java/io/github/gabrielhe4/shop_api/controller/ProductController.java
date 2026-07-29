@@ -40,15 +40,22 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping("/admin/categories/{id}/product")
+    @PostMapping("/admin/product")
     @Operation(summary = "Create a new product", description = "Creates a new product under the specified category")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Product created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid request body")
     })
-    public ResponseEntity<ProductDTO> createProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest request) {
-        ProductDTO response = productService.addProduct(id, request);
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductRequest request) {
+        ProductDTO response = productService.addProduct(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/admin/product/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest request) {
+        var response = productService.updateProduct(id, request);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/public/products")

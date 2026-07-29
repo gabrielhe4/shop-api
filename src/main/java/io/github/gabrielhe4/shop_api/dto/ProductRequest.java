@@ -1,6 +1,8 @@
 package io.github.gabrielhe4.shop_api.dto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -16,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
     description = "DTO for creating a new product in the shop API",
     example = """
         {
+            "categoryId":"1",
             "name": "Wireless Bluetooth Headphones",
             "description": "High-quality wireless headphones with noise cancellation and 30-hour battery life. Features premium sound quality and comfortable over-ear design.",
             "stock": 50,
@@ -26,8 +29,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 )
 public record ProductRequest(
 
+    @NotNull(message = "Category id is required")
+    @Positive(message = "Only positive values for category")
+    @Schema(description = "Category ID", example = "123")
+    Long categoryId,
+
     @NotNull(message = "Product name is required")
-    @Size(min = 3, max = 20, message = "Product name must be between 3 and 20 characters")
+    @Size(min = 3, max = 40, message = "Product name must be between 3 and 40 characters")
     @Schema(
         name = "name",
         example = "Wireless Bluetooth Headphones",
@@ -42,9 +50,10 @@ public record ProductRequest(
         example = "High-quality wireless headphones with noise cancellation and 30-hour battery life. Features premium sound quality and comfortable over-ear design.",
         defaultValue = "High-quality wireless headphones with noise cancellation and 30-hour battery life"
     )
-    String description, 
+    String description,
 
     @NotNull(message = "Stock is required")
+    @PositiveOrZero(message = "Stock can not be a negative value")
     @Schema(
         name = "stock",
         example = "50",
@@ -52,6 +61,7 @@ public record ProductRequest(
         defaultValue = "50"
     )
     Integer stock,
+    @Positive(message = "Only positive values for price")
     @NotNull(message = "Price is required")
     @Schema(
         name = "price",
@@ -60,8 +70,9 @@ public record ProductRequest(
         defaultValue = "129.99"
     )
     Double price,
-    
+
     @NotNull(message = "Discount is required")
+    @PositiveOrZero(message = "Only positive values or zero for discount")
     @Schema(
         name = "discount",
         example = "15.0",

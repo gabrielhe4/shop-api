@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "categories")
@@ -34,8 +35,10 @@ public class Category {
 
     @NotBlank
     @Column(nullable = false, unique = true)
+    @Setter
     private String name;
 
+    @Setter
     private String description;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)

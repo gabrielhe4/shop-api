@@ -52,7 +52,9 @@ public class CategoryServiceImpl implements CategoryService {
         Category existingCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
 
-        CategoryMapper.INSTANCE.updateEntity(request, existingCategory);
+        existingCategory.setName(request.name());
+        existingCategory.setDescription(request.description());
+
         categoryRepository.save(existingCategory);
 
         log.info("Category with ID {} was updated succesfully.", id);

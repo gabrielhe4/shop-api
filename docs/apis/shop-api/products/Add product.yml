@@ -5,15 +5,16 @@ info:
 
 http:
   method: POST
-  url: "{{baseUrl}}/api/admin/categories/1/product"
+  url: "{{baseUrl}}/api/admin/product"
   body:
     type: json
     data: |-
       {
+        "categoryId": 12,
         "name": "Notebook",
         "description":"Notebooks with 100 sheets",
-        "stock":100,
-        "price": 5.99,
+        "stock": 50,
+        "price": 2.99,
         "discount": 10
       }
   auth: inherit

@@ -10,8 +10,8 @@ http:
     type: json
     data: |-
       {
-        "name": "Office",
-        "description": "Products for office and school :P"
+        "name": "Others",
+        "description": "Products that are not belong to any category in the catalog :P"
       }
   auth: inherit
 

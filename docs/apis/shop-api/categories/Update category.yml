@@ -5,13 +5,13 @@ info:
 
 http:
   method: PUT
-  url: "{{baseUrl}}/api/admin/categories/1"
+  url: "{{baseUrl}}/api/admin/categories/169"
   body:
     type: json
     data: |-
       {
-        "name": "Travelling",
-        "description": "Correcting name"
+        "name": "Others",
+        "description": "Products that are not belong to any category in the catalog"
       }
   auth: inherit
 

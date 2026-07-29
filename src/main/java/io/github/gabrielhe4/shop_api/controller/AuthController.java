@@ -39,7 +39,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
-    
+
     public AuthController(AuthenticationManager authenticationManager, AuthService authService) {
         this.authenticationManager = authenticationManager;
         this.authService = authService;
@@ -51,7 +51,7 @@ public class AuthController {
         description = "Logs in a user and returns an access token cookie along with user information. Requires username and password."
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successful authentication"), 
+        @ApiResponse(responseCode = "200", description = "Successful authentication"),
         @ApiResponse(responseCode = "401", description = "Bad credentials (invalid username or password)")
     })
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest request) {
@@ -73,9 +73,9 @@ public class AuthController {
         String cookie = dto.cookie();
 
         var response = new UserInfoResponse(dto.id(), dto.username(), dto.roles());
-        
+
         return ResponseEntity
-            .ok() 
+            .ok()
             .header(HttpHeaders.SET_COOKIE, cookie)
             .body(response);
     }
@@ -98,14 +98,14 @@ public class AuthController {
             return ResponseEntity
                 .badRequest()
                 .body(new MessageResponse("Error: Username is already taken!!!"));
-        
+
         if(authService.checkIfEmailExists(request.email()))
             return ResponseEntity
                 .badRequest()
                 .body(new MessageResponse("Error: Email is already taken!!!"));
 
         authService.registerUser(request);
-        
+
         return ResponseEntity.ok(new MessageResponse("User registered successfully"));
     }
 
@@ -127,9 +127,9 @@ public class AuthController {
         if (auth == null)
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Error: User not found");
 
-        var response = authService.authenticateUser(auth);
+        var username = auth.getName();
 
-        return ResponseEntity.ok().body(response.username());
+        return ResponseEntity.ok().body(username);
 
     }
 
@@ -143,18 +143,18 @@ public class AuthController {
         description = "Successfully signed out",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class))
     )
-    public ResponseEntity<MessageResponse> postMethodName(@RequestBody String entity) {
+    public ResponseEntity<MessageResponse> signOut() {
         var cleanedCookie = authService.cleanJwtCookie();
 
         return ResponseEntity.ok()
             .header(HttpHeaders.SET_COOKIE,  cleanedCookie)
             .body(new MessageResponse("You've been signed out!"));
     }
-    
-    
-    
 
 
-    
+
+
+
+
 
 }

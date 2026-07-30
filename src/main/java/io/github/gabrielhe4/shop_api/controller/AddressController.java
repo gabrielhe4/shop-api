@@ -36,13 +36,13 @@ public class AddressController {
 
     private final AuthUtil authUtil;
     private final AddressService addressService;
-    
+
     public AddressController(AuthUtil authUtil, AddressService addressService) {
         this.authUtil = authUtil;
         this.addressService = addressService;
     }
 
-    @PostMapping("/addresses")
+    @PostMapping("/user/addresses")
     @Operation(
         summary = "Create a new address",
         description = "Creates a new shipping address for the authenticated user"
@@ -60,10 +60,10 @@ public class AddressController {
         var response = addressService.create(request, user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        
+
     }
 
-    @GetMapping("/addresses")
+    @GetMapping("/admin/addresses")
     @Operation(
         summary = "Get all addresses",
         description = "Returns a list of all addresses in the system"
@@ -76,13 +76,13 @@ public class AddressController {
         )
     )
     public ResponseEntity<List<AddressResponse>> getAddresses() {
-        
+
         var response = addressService.getAllAddresses();
         return ResponseEntity.ok(response);
 
     }
 
-    @GetMapping("/addresses/{addressId}")
+    @GetMapping("/user/addresses/{addressId}")
     @Operation(
         summary = "Get address by ID",
         description = "Retrieves a specific address by its ID"
@@ -94,8 +94,8 @@ public class AddressController {
             schema = @Schema(implementation = AddressResponse.class)
         )
     )
-    public ResponseEntity<AddressResponse> getAddressById(@Parameter(description = "Address ID") @PathVariable Long addressId) { 
-        
+    public ResponseEntity<AddressResponse> getAddressById(@Parameter(description = "Address ID") @PathVariable Long addressId) {
+
         var response = addressService.getAddressById(addressId);
         return ResponseEntity.ok(response);
 
@@ -121,7 +121,7 @@ public class AddressController {
 
     }
 
-    @PutMapping("/addresses/{id}")
+    @PutMapping("/user/addresses/{id}")
     @Operation(
         summary = "Update an address",
         description = "Updates an existing address with new information"
@@ -133,15 +133,15 @@ public class AddressController {
             schema = @Schema(implementation = AddressResponse.class)
         )
     )
-    public ResponseEntity<AddressResponse> updateAddress(@Parameter(description = "Address ID") @PathVariable String id, 
+    public ResponseEntity<AddressResponse> updateAddress(@Parameter(description = "Address ID") @PathVariable String id,
         @Valid @RequestBody AddressRequest request) {
-        
+
         var response = addressService.updateAddress(Long.parseLong(id), request);
         return ResponseEntity.ok(response);
-        
+
     }
 
-    @DeleteMapping("/addresses/{id}")
+    @DeleteMapping("/user/addresses/{id}")
     @Operation(
         summary = "Delete an address",
         description = "Permanently deletes the specified address"
@@ -154,10 +154,10 @@ public class AddressController {
         )
     )
     public ResponseEntity<MessageResponse> deleteAddress(@Parameter(description = "Address ID") @PathVariable Long id) {
-        
+
         addressService.deleteAddress(id);
-        
+
         return ResponseEntity.ok(new MessageResponse("Address deleted successfully"));
     }
-    
+
 }

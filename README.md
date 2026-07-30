@@ -93,6 +93,7 @@ http://localhost:8080/swagger-ui/index.html#/
 - Microservices migration
 - UI development (React, Angular)
 - Unit tests
+- Founded bugs
 
 ## Learning objectives
 

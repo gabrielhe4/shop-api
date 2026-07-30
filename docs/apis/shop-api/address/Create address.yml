@@ -5,18 +5,18 @@ info:
 
 http:
   method: POST
-  url: "{{baseUrl}}/api/addresses"
+  url: "{{baseUrl}}/api/user/addresses"
   body:
     type: json
-    data: |-
-      {
-        "street": "Miguel allende",
-        "buildingName": "no. 4",
-        "city": "Chihuahua",
-        "state": "Chihuahua",
-        "country": "Mexico",
-        "zipcode": "31074"
-      }
+    data: |2-
+        {
+          "street": "Calle Juárez",
+          "buildingName": "Edificio Central",
+          "city": "Guadalajara",
+          "state": "Jalisco",
+          "country": "Mexico",
+          "zipcode": "44100"
+        }
   auth: inherit
 
 settings:

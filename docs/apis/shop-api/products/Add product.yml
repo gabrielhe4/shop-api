@@ -8,15 +8,15 @@ http:
   url: "{{baseUrl}}/api/admin/product"
   body:
     type: json
-    data: |-
-      {
-        "categoryId": 12,
-        "name": "Notebook",
-        "description":"Notebooks with 100 sheets",
-        "stock": 50,
-        "price": 2.99,
-        "discount": 10
-      }
+    data: |2-
+        {
+          "categoryId": 13,
+          "name": "Wireless Printer",
+          "description": "All-in-one wireless printer with scanning and copying capabilities.",
+          "stock": 2,
+          "price": 5.99,
+          "discount": 10
+        }
   auth: inherit
 
 settings:

@@ -5,10 +5,10 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/api/public/products?pageNumber=0&pageSize=10&sortBy=id&sortOrder=asc"
+  url: "{{baseUrl}}/api/public/products?pageNumber=2&pageSize=10&sortBy=id&sortOrder=asc"
   params:
     - name: pageNumber
-      value: "0"
+      value: "2"
       type: query
     - name: pageSize
       value: "10"

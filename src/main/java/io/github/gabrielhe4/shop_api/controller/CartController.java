@@ -46,7 +46,7 @@ public class CartController {
         description = "Adds a product to the user's shopping cart with the specified quantity"
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Product successfully added to cart", 
+        @ApiResponse(responseCode = "201", description = "Product successfully added to cart",
             content = @Content(schema = @Schema(implementation = CartResponse.class))),
         @ApiResponse(responseCode = "400", description = "Invalid request - missing or invalid fields"),
         @ApiResponse(responseCode = "404", description = "User not found")
@@ -54,9 +54,9 @@ public class CartController {
     public ResponseEntity<CartResponse> addProductToCart(
         @Valid @RequestBody CartRequest request
     ) {
-        
+
         var response = cartService.addProductToCart(request.productId(), request.quantity());
-        
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -66,28 +66,28 @@ public class CartController {
         description = "Retrieves the current state of the user's shopping cart with all items and total price"
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Cart retrieved successfully", 
+        @ApiResponse(responseCode = "200", description = "Cart retrieved successfully",
             content = @Content(schema = @Schema(implementation = CartResponse.class))),
         @ApiResponse(responseCode = "401", description = "User not authenticated"),
         @ApiResponse(responseCode = "404", description = "Cart not found")
     })
     public ResponseEntity<CartResponse> getCartById() {
-        
+
         var response = cartService.getCart();
 
         return ResponseEntity.ok(response);
 
     }
 
-    // in operation send add -> to add 
-    @PutMapping("/cart/products/{productId}")
+    // in operation send add -> to add
+    @PutMapping("/user/cart/products/{productId}")
     @Operation(
         summary = "Update product quantity in cart",
         description = "Adds or removes items from the shopping cart for a specific product\n" +
             "Send 'add' to add an item (quantity +1), or 'delete' to remove (quantity -1)"
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Cart updated successfully", 
+        @ApiResponse(responseCode = "200", description = "Cart updated successfully",
             content = @Content(schema = @Schema(implementation = CartResponse.class))),
         @ApiResponse(responseCode = "400", description = "Invalid operation parameter"),
         @ApiResponse(responseCode = "404", description = "Product not found or cart not found")
@@ -108,7 +108,7 @@ public class CartController {
         description = "Completely removes a product from the user's shopping cart"
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Product successfully deleted from cart", 
+        @ApiResponse(responseCode = "200", description = "Product successfully deleted from cart",
             content = @Content(schema = @Schema(implementation = String.class), mediaType = "application/json")),
         @ApiResponse(responseCode = "404", description = "Product not found in cart")
     })
@@ -120,7 +120,7 @@ public class CartController {
         return ResponseEntity.ok(status);
 
     }
-    
-    
-    
+
+
+
 }

@@ -2,7 +2,6 @@ package io.github.gabrielhe4.shop_api.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import io.github.gabrielhe4.shop_api.dto.CategoryDTO;

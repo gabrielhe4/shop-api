@@ -2,7 +2,7 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-ShopApiApplication<shop-api>",
+            "name": "shop-api",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "mainClass": "io.github.gabrielhe4.shop_api.ShopApiApplication",

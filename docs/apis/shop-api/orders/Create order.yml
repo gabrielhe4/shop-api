@@ -1,0 +1,25 @@
+info:
+  name: Create order
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/user/order/payments/CARD"
+  body:
+    type: json
+    data: |-
+      {
+        "addressId": 1,
+        "pgName":"Stripe",
+        "pgPaymentId": "pi_!FHEhk2eZvKY1o2Cck4UJNdW",
+        "pgStatus": "success",
+        "pgResponseMessage": "Payment successfull"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

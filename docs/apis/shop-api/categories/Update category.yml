@@ -1,0 +1,22 @@
+info:
+  name: Update category
+  type: http
+  seq: 3
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/admin/categories/169"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Others",
+        "description": "Products that are not belong to any category in the catalog"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

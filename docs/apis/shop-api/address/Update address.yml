@@ -1,0 +1,26 @@
+info:
+  name: Update address
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/addresses/1"
+  body:
+    type: json
+    data: |
+      {
+        "street": "",
+        "buildingName": "",
+        "city": "",
+        "state": "",
+        "country": "",
+        "zipcode": ""
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

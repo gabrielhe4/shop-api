@@ -1,0 +1,19 @@
+info:
+  name: Update cart product
+  type: http
+  seq: 3
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/cart/products/1?operation=add"
+  params:
+    - name: operation
+      value: add
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

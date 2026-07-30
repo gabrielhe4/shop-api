@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "shop-api",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "io.github.gabrielhe4.shop_api.ShopApiApplication",
+            "projectName": "shop-api",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

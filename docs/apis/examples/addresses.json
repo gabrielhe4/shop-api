@@ -1,0 +1,162 @@
+[
+  {
+    "street": "Av. Insurgentes Sur",
+    "buildingName": "Torre Reforma",
+    "city": "Ciudad de México",
+    "state": "Ciudad de México",
+    "country": "Mexico",
+    "zipcode": "03100"
+  },
+  {
+    "street": "Calle Juárez",
+    "buildingName": "Edificio Central",
+    "city": "Guadalajara",
+    "state": "Jalisco",
+    "country": "Mexico",
+    "zipcode": "44100"
+  },
+  {
+    "street": "Av. Constitución",
+    "buildingName": "Plaza Monterrey",
+    "city": "Monterrey",
+    "state": "Nuevo León",
+    "country": "Mexico",
+    "zipcode": "64000"
+  },
+  {
+    "street": "Blvd. Colosio",
+    "buildingName": "Residencial Las Palmas",
+    "city": "Aguascalientes",
+    "state": "Aguascalientes",
+    "country": "Mexico",
+    "zipcode": "20126"
+  },
+  {
+    "street": "Av. Universidad",
+    "buildingName": "Condominio Vista Real",
+    "city": "Querétaro",
+    "state": "Querétaro",
+    "country": "Mexico",
+    "zipcode": "76030"
+  },
+  {
+    "street": "Calle Hidalgo",
+    "buildingName": "Edificio Hidalgo",
+    "city": "Puebla",
+    "state": "Puebla",
+    "country": "Mexico",
+    "zipcode": "72000"
+  },
+  {
+    "street": "Av. Paseo Montejo",
+    "buildingName": "Torre Mérida",
+    "city": "Mérida",
+    "state": "Yucatán",
+    "country": "Mexico",
+    "zipcode": "97000"
+  },
+  {
+    "street": "Calle 60",
+    "buildingName": "Residencial Santa Ana",
+    "city": "Mérida",
+    "state": "Yucatán",
+    "country": "Mexico",
+    "zipcode": "97070"
+  },
+  {
+    "street": "Blvd. Kukulcán",
+    "buildingName": "Hotel Zone Plaza",
+    "city": "Cancún",
+    "state": "Quintana Roo",
+    "country": "Mexico",
+    "zipcode": "77500"
+  },
+  {
+    "street": "Av. Bonampak",
+    "buildingName": "Condominio Caribe",
+    "city": "Cancún",
+    "state": "Quintana Roo",
+    "country": "Mexico",
+    "zipcode": "77503"
+  },
+  {
+    "street": "Calle Allende",
+    "buildingName": "Edificio Colonial",
+    "city": "San Luis Potosí",
+    "state": "San Luis Potosí",
+    "country": "Mexico",
+    "zipcode": "78000"
+  },
+  {
+    "street": "Av. Tecnológico",
+    "buildingName": "Residencial San Ángel",
+    "city": "Chihuahua",
+    "state": "Chihuahua",
+    "country": "Mexico",
+    "zipcode": "31125"
+  },
+  {
+    "street": "Blvd. Independencia",
+    "buildingName": "Torre Laguna",
+    "city": "Torreón",
+    "state": "Coahuila",
+    "country": "Mexico",
+    "zipcode": "27000"
+  },
+  {
+    "street": "Av. Revolución",
+    "buildingName": "Edificio Reforma",
+    "city": "Tijuana",
+    "state": "Baja California",
+    "country": "Mexico",
+    "zipcode": "22000"
+  },
+  {
+    "street": "Calle Morelos",
+    "buildingName": "Conjunto Habitacional Morelos",
+    "city": "León",
+    "state": "Guanajuato",
+    "country": "Mexico",
+    "zipcode": "37000"
+  },
+  {
+    "street": "Av. Las Torres",
+    "buildingName": "Residencial Campestre",
+    "city": "León",
+    "state": "Guanajuato",
+    "country": "Mexico",
+    "zipcode": "37150"
+  },
+  {
+    "street": "Blvd. Forjadores",
+    "buildingName": "Condominio Los Arcos",
+    "city": "Pachuca",
+    "state": "Hidalgo",
+    "country": "Mexico",
+    "zipcode": "42080"
+  },
+  {
+    "street": "Calle Zaragoza",
+    "buildingName": "Edificio Alameda",
+    "city": "Toluca",
+    "state": "Estado de México",
+    "country": "Mexico",
+    "zipcode": "50000"
+  },
+  {
+    "street": "Av. Lázaro Cárdenas",
+    "buildingName": "Residencial del Valle",
+    "city": "Morelia",
+    "state": "Michoacán",
+    "country": "Mexico",
+    "zipcode": "58000"
+  },
+  {
+    "street": "Blvd. Miguel Alemán",
+    "buildingName": "Torre Ejecutiva",
+    "city": "Veracruz",
+    "state": "Veracruz",
+    "country": "Mexico",
+    "zipcode": "91910"
+  }
+]

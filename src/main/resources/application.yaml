@@ -1,3 +1,18 @@
+project:
+    image: images
+    jwtSecret: N9tX3I1JrXhN4xvGQ5XkM2lY8sQmRkP2cH9vL8tD6Ww=
+    jwtExpirationMs: 300000
+    jwtCookieName: springBootEcom
+
 spring:
   application:
     name: shop-api
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecommerce
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true

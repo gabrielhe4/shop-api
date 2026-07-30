@@ -1,0 +1,32 @@
+info:
+  name: Update image product
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/products/1/image"
+  headers:
+    - name: ""
+      value: ""
+      disabled: true
+  params:
+    - name: image
+      value: ""
+      type: query
+      disabled: true
+  body:
+    type: multipart-form
+    data:
+      - name: image
+        type: file
+        value:
+          - /home/cheems/Pictures/notebook.jpg
+        contentType: image/jpeg
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

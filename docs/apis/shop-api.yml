@@ -1,0 +1,512 @@
+opencollection: 1.0.0
+info:
+  name: shop-api
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ''
+      port: ''
+      auth:
+        username: ''
+        password: ''
+      bypassProxy: ''
+  environments:
+    - name: dev
+      variables:
+        - name: baseUrl
+          value: http://localhost:8080
+items:
+  - info:
+      name: address
+      type: folder
+      seq: 4
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Create address
+          type: http
+          seq: 1
+        http:
+          method: POST
+          url: '{{baseUrl}}/api/addresses'
+          body:
+            type: json
+            data: |-
+              {
+                "street": "Miguel allende",
+                "buildingName": "no. 4",
+                "city": "Chihuahua",
+                "state": "Chihuahua",
+                "country": "Mexico",
+                "zipcode": "31074"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Delete address
+          type: http
+          seq: 6
+        http:
+          method: DELETE
+          url: '{{baseUrl}}/api/1'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Get address by Id
+          type: http
+          seq: 3
+        http:
+          method: GET
+          url: '{{baseUrl}}/api/addresses/1'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Get address by user
+          type: http
+          seq: 4
+        http:
+          method: GET
+          url: '{{baseUrl}}/api/user/addresses'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Get all addresses
+          type: http
+          seq: 2
+        http:
+          method: GET
+          url: '{{baseUrl}}/api/addresses'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Update address
+          type: http
+          seq: 5
+        http:
+          method: PUT
+          url: '{{baseUrl}}/api/addresses/1'
+          body:
+            type: json
+            data: |
+              {
+                "street": "",
+                "buildingName": "",
+                "city": "",
+                "state": "",
+                "country": "",
+                "zipcode": ""
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+  - info:
+      name: auth
+      type: folder
+      seq: 1
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Get user
+          type: http
+          seq: 3
+        http:
+          method: GET
+          url: '{{baseUrl}}/api/auth/username'
+          headers:
+            - name: ''
+              value: ''
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Sign in
+          type: http
+          seq: 1
+        http:
+          method: POST
+          url: '{{baseUrl}}/api/auth/sign-in'
+          headers:
+            - name: springBoot
+              value: ''
+          body:
+            type: json
+            data: |-
+              {
+                "username": "user1",
+                "password": "password1"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Sign out
+          type: http
+          seq: 2
+        http:
+          method: POST
+          url: '{{baseUrl}}/api/auth/sign-out'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Sign up
+          type: http
+          seq: 4
+        http:
+          method: POST
+          url: '{{baseUrl}}/api/auth/sign-up'
+          body:
+            type: json
+            data: |-
+              {
+                "username" : "",
+                "email": "",
+                "roles": "",
+                "password": ""
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+  - info:
+      name: cart
+      type: folder
+      seq: 5
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Add product to cart
+          type: http
+          seq: 1
+        http:
+          method: POST
+          url: '{{baseUrl}}/api/cart/products'
+          body:
+            type: json
+            data: |-
+              {
+                "productId": 1,
+                "quantity" : 4
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Get user cart
+          type: http
+          seq: 2
+        http:
+          method: GET
+          url: '{{baseUrl}}/api/cart/user'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Update cart product
+          type: http
+          seq: 3
+        http:
+          method: PUT
+          url: '{{baseUrl}}/api/cart/products/1?operation=add'
+          params:
+            - name: operation
+              value: add
+              type: query
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+  - info:
+      name: categories
+      type: folder
+      seq: 3
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Create category
+          type: http
+          seq: 2
+        http:
+          method: POST
+          url: '{{baseUrl}}/api/admin/category'
+          body:
+            type: json
+            data: |-
+              {
+                "name": "Office",
+                "description": "Products for office and school :P"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Delete category
+          type: http
+          seq: 4
+        http:
+          method: DELETE
+          url: '{{baseUrl}}/api/admin/categories/1'
+          body:
+            type: json
+            data: ''
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Update category
+          type: http
+          seq: 3
+        http:
+          method: PUT
+          url: '{{baseUrl}}/api/admin/categories/1'
+          body:
+            type: json
+            data: |-
+              {
+                "name": "Travelling",
+                "description": "Correcting name"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: get all categories
+          type: http
+          seq: 1
+        http:
+          method: GET
+          url: '{{baseUrl}}/api/public/categories'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+  - info:
+      name: orders
+      type: folder
+      seq: 6
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Create order
+          type: http
+          seq: 1
+        http:
+          method: POST
+          url: '{{baseUrl}}/api/user/order/payments/CARD'
+          body:
+            type: json
+            data: |-
+              {
+                "addressId": 1,
+                "pgName":"Stripe",
+                "pgPaymentId": "pi_!FHEhk2eZvKY1o2Cck4UJNdW",
+                "pgStatus": "success",
+                "pgResponseMessage": "Payment successfull"
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+  - info:
+      name: products
+      type: folder
+      seq: 2
+    request:
+      auth: inherit
+    items:
+      - info:
+          name: Add product
+          type: http
+          seq: 3
+        http:
+          method: POST
+          url: '{{baseUrl}}/api/admin/categories/1/product'
+          body:
+            type: json
+            data: |-
+              {
+                "name": "Notebook",
+                "description":"Notebooks with 100 sheets",
+                "stock":100,
+                "price": 5.99,
+                "discount": 10
+              }
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Delete product
+          type: http
+          seq: 5
+        http:
+          method: DELETE
+          url: '{{baseUrl}}/api/admin/products/1'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Get all products
+          type: http
+          seq: 1
+        http:
+          method: GET
+          url: '{{baseUrl}}/api/public/products?pageNumber=0&pageSize=10&sortBy=id&sortOrder=asc'
+          params:
+            - name: pageNumber
+              value: '0'
+              type: query
+            - name: pageSize
+              value: '10'
+              type: query
+            - name: sortBy
+              value: id
+              type: query
+            - name: sortOrder
+              value: asc
+              type: query
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Get products by category
+          type: http
+          seq: 2
+        http:
+          method: GET
+          url: '{{baseUrl}}/api/public/categories/1/products'
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+      - info:
+          name: Update image product
+          type: http
+          seq: 4
+        http:
+          method: PUT
+          url: '{{baseUrl}}/api/products/1/image'
+          headers:
+            - name: ''
+              value: ''
+              disabled: true
+          params:
+            - name: image
+              value: ''
+              type: query
+              disabled: true
+          body:
+            type: multipart-form
+            data:
+              - name: image
+                type: file
+                value:
+                  - /home/cheems/Pictures/notebook.jpg
+          auth: inherit
+        settings:
+          encodeUrl: true
+          timeout: 0
+          followRedirects: true
+          maxRedirects: 5
+          forwardAuthorizationHeader: true
+bundled: true
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
+    exportedAt: '2026-08-27T19:54:13.320Z'
+    exportedUsing: Bruno
